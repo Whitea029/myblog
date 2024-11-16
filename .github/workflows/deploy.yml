@@ -26,6 +26,18 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  # 添加主机到已知主机列表
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Install SSH client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client
+
       - name: Deploy to Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -33,13 +45,5 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
-          # Install SSH client
-          apt-get update && apt-get install -y openssh-client
-
-          # Set up SSH keys
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          # Deploy files
+          # 使用 rsync 部署文件
           rsync -avz --delete public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
