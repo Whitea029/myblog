@@ -47,4 +47,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
-          rsync -avz --delete public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
+          rsync -avz --delete -vv public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
