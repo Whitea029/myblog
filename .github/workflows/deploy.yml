@@ -28,6 +28,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openssh-client rsync  
 
+      - name: Check for rsync
+        run: |
+          which rsync
+          rsync --version
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -42,5 +47,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
-          # 使用 rsync 部署文件
           rsync -avz --delete public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
