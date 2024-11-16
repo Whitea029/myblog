@@ -15,9 +15,6 @@ jobs:
         with:
           submodules: 'recursive'  
 
-      - name: "Debug: List files"
-        run: ls -R  # 列出项目文件，帮助确认主题是否存在
-
       - name: Set up Hugo
         uses: peaceiris/actions-hugo@v3
         with:
@@ -26,17 +23,17 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      - name: Install SSH client and rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client rsync  
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  # 添加主机到已知主机列表
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
-      - name: Install SSH client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
 
       - name: Deploy to Server
         env:
