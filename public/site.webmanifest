@@ -1,7 +1,7 @@
 {
     "name": "Whitea's blog",
     "short_name": "Whitea's blog",
-    "start_url": "http://localhost:1313/",
+    "start_url": "https://example.org/",
     "theme_color": "#434648",
     "background_color": "#131418",
     "display": "standalone",
