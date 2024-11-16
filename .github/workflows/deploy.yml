@@ -1,0 +1,40 @@
+name: Deploy Hugo Site
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Hugo
+        uses: peaceiris/hugo-action@v2.6.0
+        with:
+          hugo-version: 'latest'  
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          TARGET_DIR: ${{ secrets.TARGET_DIR }}
+        run: |
+          # Install SSH client
+          apt-get update && apt-get install -y openssh-client
+
+          # Set up SSH keys
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # Deploy files
+          rsync -avz --delete public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
