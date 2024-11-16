@@ -5,6 +5,10 @@ title = 'My New Hugo Site'
 theme = ["hugo-blog-awesome"]
 enableEmoji = true
 
+[module]
+  [[module.imports]]
+    path = "github.com/hugo-sid/hugo-blog-awesome"  
+
 [menu]
   [[menu.main]]
     pageRef="/"
