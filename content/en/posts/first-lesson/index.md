@@ -4,6 +4,7 @@ date: 2024-11-16
 author: Whitea
 description: Sample article showcasing basic Markdown syntax and formatting for HTML elements.
 isStarred: true
+toC: false
 ---
 
 # 碎碎念

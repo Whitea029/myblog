@@ -13,7 +13,7 @@
         height="{{ .Height }}" />
     {{ end }}
     {{ end }}
-    <h2 class="author-name">{{ .Site.Params.author.intro }}</h2>
+    <h2 class="author-name">{{ ":yawning_face:" | .RenderString}}{{ .Site.Params.author.intro }}</h2>
 
     <p class="author-bio">{{ "Hello! :wave: Welcome to my blog!" | .RenderString }}</p>
     <p class="author-bio">{{ .Site.Params.author.description }}</p>

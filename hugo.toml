@@ -1,9 +1,14 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://blog.whitea.fun/'
 languageCode = 'en-us'
 contentDir = "content/en"
 title = 'My New Hugo Site'
 theme = ["hugo-blog-awesome"]
 enableEmoji = true
+
+
+[markup]
+  [markup.highlight]
+    noClasses = false
 
 [menu]
   [[menu.main]]
@@ -34,14 +39,22 @@ enableEmoji = true
 
   [params.author]
     intro = "Whitea blog"
-    avatar = "/avatar.png"
+    avatar = "avater.png"
     name = "Whitea"
     description = "I'm a computer science student in Jiangsu sharing my journey in back-end development and tech insights."
 
   [[params.socialIcons]]
   name = "github"
-  url = "https://github.com/hugo-sid"
+  url = "https://github.com/Whitea029"
 
   [[params.socialIcons]]
   name = "twitter"
   url = "https://twitter.com"
+
+  [[params.socialIcons]]
+  name = "Rss"
+  url = "/index.xml"
+
+  [[params.socialIcons]]
+  name = "QQ"
+  url = "/qqbincode.png"
