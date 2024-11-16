@@ -1,0 +1,47 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+contentDir = "content/en"
+title = 'My New Hugo Site'
+theme = ["hugo-blog-awesome"]
+enableEmoji = true
+
+[menu]
+  [[menu.main]]
+    pageRef="/"
+    name = 'Home'
+    url = '/'
+    weight = 10
+
+  [[menu.main]]
+    pageRef="about"
+    name = 'About'
+    url = '/pages/about/'
+    weight = 30
+
+  [[menu.main]]
+    pageRef="posts"
+    name = 'Posts'
+    url = '/posts/'
+    weight = 20
+
+[params]
+  sitename = "Whitea's blog"
+  defaultColor = "dark"
+  description = "Minimal Hugo blog theme with light and dark mode support"
+  mainSections = ['posts']
+  toc = true
+  goToTop = true
+
+  [params.author]
+    intro = "Whitea blog"
+    avatar = "/avatar.png"
+    name = "Whitea"
+    description = "I'm a computer science student in Jiangsu sharing my journey in back-end development and tech insights."
+
+  [[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/hugo-sid"
+
+  [[params.socialIcons]]
+  name = "twitter"
+  url = "https://twitter.com"
