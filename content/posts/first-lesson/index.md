@@ -1,10 +1,38 @@
 ---
-title: The First Lesson of the Web Gruop - CN
-date: 2024-11-16
-author: Whitea
-description: Sample article showcasing basic Markdown syntax and formatting for HTML elements.
-isStarred: true
-toC: false
+title: "Web组后端第一次授课"
+date: 2024-10-15T11:30:03+00:00
+# weight: 1
+# aliases: ["/first"]
+tags: ["SAST"]
+author: "Whitea"
+showToc: true
+TocOpen: false
+draft: false
+hidemeta: false
+comments: false
+description: "Desc Text."
+canonicalURL: "https://canonical.url/to/page"
+disableHLJS: true # to disable highlightjs
+disableShare: false
+disableHLJS: false
+hideSummary: false
+searchHidden: true
+ShowReadingTime: true
+ShowBreadCrumbs: true
+ShowPostNavLinks: true
+ShowWordCount: true
+ShowRssButtonInSectionTermList: true
+UseHugoToc: true
+cover:
+    image: "<image path/url>" # image path/url
+    alt: "<alt text>" # alt text
+    caption: "<text>" # display caption under cover
+    relative: false # when using page bundles set this to true
+    hidden: true # only hide on current single page
+editPost:
+    URL: "https://github.com/Whitea029/myblog/blob/main/content"
+    Text: "Source" # edit text
+    appendFilePath: true # to append file path to Edit link
 ---
 
 # 碎碎念
@@ -19,17 +47,17 @@ toC: false
 
 - b站这个页面就是前端展示出来的，但是着其中的每一个词条，视频，数据来源都是来源于后端数据库，然后经过后端程序一些算法逻辑传递给前端进行展示。
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40714522/1725773273021-2ea0b7da-306b-44ac-81f0-4dc70ed35c1f.png)
+![](images/first-lesson/001.png)
 
 - GitHub（全球最大同性交友平台）的登录界面，这个界面就是前端展示的，而当我们输入Username和Password并点击Sign in之后，数据会传递给后端服务器处理，只有当后端服务器校验通过后，才会给前端返回正确的信息，前端才会跳转主页。
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40714522/1725773539611-bc0354d6-d30a-48b8-94fa-89b4490c017f.png)
+![](images/first-lesson/002.png)
 
 # 后端开发用什么语言
 
 [TIOBE Index - TIOBE](https://www.tiobe.com/tiobe-index/)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40714522/1729224709500-87ba9e08-9bc7-42f2-ac55-7f79f8f07c97.png)
+![](images/first-lesson/003.png)
 
 在国内，Java仍是后端开发的主流语言，凭借其成熟的生态和广泛的社区支持，成为众多企业的首选。在招聘市场上，Java技能依然是后端开发岗位的主要要求。然而，随着云原生技术的发展，Go和Rust等新兴语言也逐渐崛起，特别是在字节跳动、腾讯等大厂，GoLang已经被广泛应用于后端开发。同时，Python、C#和Node.js等语言在特定场景下也发挥着重要作用，丰富了后端开发的语言选择。
 
@@ -49,7 +77,7 @@ toC: false
 
 [南京Java工资待遇_收入水平-BOSS直聘 (zhipin.com)](https://www.zhipin.com/salaryxc/c101190100_p100101.html)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40714522/1725775407722-894dd5ff-7f21-47f8-8165-b7e1aa352e4e.png)
+![](images/first-lesson/004.png)
 
 根据许多学长的经验，**对于前后端开发方向的同学来说**，考研的意义并不如就业那么明显（考研三年所积累的知识和三年实际工作经验相比，差距较大）。很多学长在大三时会主动寻找相关岗位的实习机会，这段实习经历往往会让他们在大四的秋招中对那些没有实习经历的同学形成降维打击，因为企业更倾向于招聘有实习经验的学生。
 
@@ -88,7 +116,7 @@ toC: false
 
 而后来因为版权的问题，Oak不得不改名，但关于改成什么，大家并没有灵感，**直到有一天团队的几个主要成员在一起喝咖啡，正品尝一种来自爪哇岛（Java）的咖啡**。此时，其中的一个工程师突然想到，他们之所以要创建一门新语言，在很大程度上，就是期望把程序员从工程的泥潭中拯救出来，从而让大家有闲暇的时间来品一杯美味的咖啡。于是**Oka就被改名为Java**，**寓意着程序员如果用Java开发，从此之后能过上从容、惬意的生活(不是)。**
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40714522/1729225781832-523ba322-d1be-461b-afd8-c57150520058.png)
+![](images/first-lesson/005.png)
 
 # Java主要特性
 
@@ -139,7 +167,7 @@ Java发展时间长,受到全世界众多程序员的青睐,建立了完整的�
 
 现在我来编写第一个Java程序，以IDEA为例
 
-![](https://github.com/LanshanTeam/Courseware-Backend-Java-2023/raw/main/lesson1/src/resource/img_2.png)
+![](images/first-lesson/006.png)
 
 ```java
 public class HelloWorld {

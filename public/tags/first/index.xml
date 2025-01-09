@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on Whitea&#39;s Blog</title>
-    <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on Whitea&#39;s Blog</description>
+    <title>First on Whitea&#39;s Blog</title>
+    <link>http://localhost:1313/tags/first/</link>
+    <description>Recent content in First on Whitea&#39;s Blog</description>
     <image>
       <title>Whitea&#39;s Blog</title>
       <url>http://localhost:1313/assets/images/cover.jpg</url>
@@ -12,7 +12,7 @@
     <generator>Hugo -- 0.140.2</generator>
     <language>en</language>
     <lastBuildDate>Tue, 15 Oct 2024 11:30:03 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/first/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Web组后端第一次授课</title>
       <link>http://localhost:1313/posts/first-lesson/</link>

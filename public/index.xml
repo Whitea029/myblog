@@ -11,14 +11,14 @@
     </image>
     <generator>Hugo -- 0.140.2</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 16 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2024 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The First Lesson of the Web Gruop - CN</title>
+      <title>Web组后端第一次授课</title>
       <link>http://localhost:1313/posts/first-lesson/</link>
-      <pubDate>Sat, 16 Nov 2024 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/first-lesson/</guid>
-      <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
+      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>
