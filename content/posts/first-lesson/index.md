@@ -1,16 +1,16 @@
 ---
-title: "Web组后端第一次授课"
+title: "啥是后端，如何学呢 🤔"
 date: 2024-10-15T11:30:03+00:00
 # weight: 1
 # aliases: ["/first"]
 tags: ["SAST"]
 author: "Whitea"
-showToc: true
+showToc: false
 TocOpen: false
 draft: false
 hidemeta: false
 comments: false
-description: "Desc Text."
+description: "SAST Web组 后端方向第一次授课"
 canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableShare: false
@@ -31,15 +31,15 @@ cover:
     hidden: true # only hide on current single page
 editPost:
     URL: "https://github.com/Whitea029/myblog/blob/main/content"
-    Text: "Source" # edit text
+    Text: "Source Code" # edit text
     appendFilePath: true # to append file path to Edit link
 ---
 
-# 碎碎念
+## 碎碎念
 
-首先欢迎大家成功通过笔试面试亦或者是免试进入到SASTWeb研发组，祝愿大家在这里能够学习到自己感兴趣的知识，结识更多志同道合的朋友。但是要记住，**加入SAST，意味着更大的舞台，更多的资源，但并不代表你很厉害。**沉下心去学，学习的路真的还挺长的。😵
+首先欢迎大家成功通过笔试面试亦或者是免试进入到SASTWeb研发组，祝愿大家在这里能够学习到自己感兴趣的知识，结识更多志同道合的朋友。但是要记住，**加入SAST，意味着更大的舞台，更多的资源，但并不代表你很厉害。** 沉下心去学，学习的路真的还挺长的。😵
 
-# 什么是后端
+## 什么是后端
 
 > 后端是指**一个软件系统的服务器端，也称作服务器端**。 它是指在一个软件系统中，负责处理数据存储、业务逻辑处理和与**前端**交互的一部分。 后端通常包括**数据库、服务器、应用程序和其他相关组件。**
 
@@ -53,7 +53,7 @@ editPost:
 
 ![](images/first-lesson/002.png)
 
-# 后端开发用什么语言
+## 后端开发用什么语言
 
 [TIOBE Index - TIOBE](https://www.tiobe.com/tiobe-index/)
 
@@ -67,7 +67,7 @@ editPost:
 
 我们目前的授课计划前期依旧是以Java为主。
 
-# 学习后端然后干嘛
+## 学习后端然后干嘛
 
 这里有两种不同的情况：一种是你对后端开发感兴趣，想初步了解后端开发的实际工作内容；另一种是你计划在大学期间持续深入学习后端开发，最终达到企业招聘的标准，未来寻找后端开发相关的岗位。
 
@@ -85,7 +85,7 @@ editPost:
 
 > 你可以不来上课，可以自学，但是你的进度不可以比我们的课程进度慢，否则你就慢了（）
 
-# 学习路线
+## 学习路线
 
 这里粘贴一份网上的学习路线，还比较全，里面也给到了很多学习资料的推荐。
 
@@ -99,14 +99,14 @@ editPost:
 
 后端的学习在初期与前端有较大区别。前端学习一点知识，就可以做出一个小作品，看到即时的学习成果，写个小项目也相对容易。但后端并没有这种即时反馈的成就感，特别是在学习Spring Boot之前，可能无法独立完成项目。这就意味着，在前期较长一段时间里，你可能会感到迷茫，不确定自己在学什么，也不清楚学这些有什么用。然而，这个阶段正是需要坚持的关键！我们的授课计划已经充分考虑到了这一点。在本学期结束时，我们会帮助大家掌握开发一个小型后端CRUD项目的能力，逐步把理论与实践结合，让大家看到自己的学习成果，打破迷茫期，增强信心。
 
-# 校内资源
+## 校内资源
 
 - SAST的github里面有不少项目，当你具备了一定的能力，我们会带你参与其中的开发。[NJUPT SAST (github.com)](https://github.com/NJUPT-SAST)
 - WoC（Winter of Code）寒假大家会有一次项目考核，通过他，基本上你就可以开始跟着我们做项目啦！（大家加油！每年的情况是4到5个人通过，大部分的人因为上半学期因为各种各样的原因没有持续学习而放弃）
 - SoC（Summer of Code）暑假大家也会进行一次团队项目开发，这个项目就已经是科协的项目啦。（也可能是项目考核）
 - 青柚工作室后端组，如果你学的不错，WoC之后，工作室会进行招新，通过面试的你可以加入到青柚工作室，接触到更多的更好的优质项目。[青柚工作室 - 用热爱创造无限可能 (njupt.edu.cn)](https://qingyou.njupt.edu.cn/)
 
-# Java的发展历史
+## Java的发展历史
 
 上个世纪90年代，消费类电子产品越来越受人追捧，为了提升消费类电子产品的智能化程度。Sun公司为了抢占市场先机，在1991年成立了一个称为Green的项目小组，专攻计算机在家电产品上的嵌入式应用。由于可以用的资源极其有限。很多成员发现C++太复杂以至很多开发者经常错误使用。而且C++缺少垃圾回收系统，还有可移植的安全性、分布程序设计、和多线程功能。为了解决这个麻烦的问题，他们决定开发出一种新的语言 **他就是java的前身：**
 
@@ -118,7 +118,7 @@ editPost:
 
 ![](images/first-lesson/005.png)
 
-# Java主要特性
+## Java主要特性
 
 - **Java 语言是简单的：**
 
@@ -136,7 +136,7 @@ Java 语言提供类、接口和继承等面向对象的特性，为了简单起
 
 Java发展时间长,受到全世界众多程序员的青睐,建立了完整的生态。你在编写Java程序时遇见的bug永远有人比你先遇见,所以你可以相关网站上寻找解答。Java还有强大的spring框架,在不久的学习后你们也会接触到
 
-# 了解 JDK,SDK,Jar,JVM,JRE
+## 了解 JDK,SDK,Jar,JVM,JRE
 
 **1. JDK (Java Development Kit)**
 
@@ -163,24 +163,24 @@ Java发展时间长,受到全世界众多程序员的青睐,建立了完整的�
 - **JRE** 是 Java 运行时环境，包含 JVM 和 Java 的核心类库，但不包括开发工具（如编译器）。JRE 提供了运行Java应用程序所需的环境，但不能用于编写或编译Java程序。用户只需要安装JRE就能运行Java应用程序。
 - **用途**：提供运行Java程序的环境。
 
-# Hello SAST
+## Hello SAST
 
 现在我来编写第一个Java程序，以IDEA为例
 
 ![](images/first-lesson/006.png)
 
 ```java
-public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("hello,world!");
-        System.out.println("hello,SAST");
+    public class HelloWorld {
+        public static void main(String[] args) {
+            System.out.println("hello,world!");
+           System.out.println("hello,SAST");
+        }
     }
-}
 ```
 
 编写完以上代码后,按下IDEA快捷键`ctrl + shift + f10` 或者右键点击运行就能输出想要的结果啦！
 
-## 上述代码的解释
+### 上述代码的解释
 
 - `public class HelloWorld{}`
 
@@ -190,6 +190,6 @@ public class HelloWorld {
 
 **main方法是一切程序的入口**，一个类只能有一个main方法，可通过键入`main`或`psvm`加`enter`快捷打出。`void`表示这个方法没有返回值。
 
-# 作业
+## 作业
 
 预习Java基础语法，数据类型，运算符，修饰符，注释，数组，流程控制
