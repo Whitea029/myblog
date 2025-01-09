@@ -1,0 +1,50 @@
+name: Deploy Hugo Site
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'  
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'  
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Install SSH client and rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client rsync  
+
+      - name: Check for rsync
+        run: |
+          which rsync
+          rsync --version
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          TARGET_DIR: ${{ secrets.TARGET_DIR }}
+        run: |
+          rsync -avz --delete -vv public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
