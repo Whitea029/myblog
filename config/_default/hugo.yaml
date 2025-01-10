@@ -21,7 +21,7 @@ params:
   title: Whitea's Blog
   description: I'm a passionate student focused on web backend development and deeply enthusiastic about open-source projects. I love learning, sharing knowledge, and exploring new technologies. Beyond coding, I'm also a badminton enthusiast, finding energy and balance through sports. Let's connect and share ideas about coding and life!
   keywords: [Blog, Portfolio, PaperMod]
-  author: Me
+  author: Whitea
   images: [/assets/images/cover.jpg]
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
@@ -74,18 +74,22 @@ params:
 
   # home-info mode
   homeInfoParams:
-    Title: "Hi there \U0001F44B"
-    Content: I'm a passionate student focused on web backend development and deeply enthusiastic about open-source projects. I love learning, sharing knowledge, and exploring new technologies. Beyond coding, I'm also a badminton enthusiast, finding energy and balance through sports. Let's connect and share ideas about coding and life!
-
+    Title: "Hi there, I'm Whitea \U0001F44B"
+    Content: |
+      👨🏻‍💻I'm passionate about **web development, open source, and sharing knowledge**.     
+      🏸Outside of coding, I enjoy playing **badminton** and embracing challenges.    
+      🐼Let's connect, exchange ideas, and grow together!       
   socialIcons:
+    - name: juejin
+      url: "https://juejin.cn/user/182960207956780"
     - name: github
       url: "https://github.com/Whitea029"
     - name: telegram
       url: "https://t.me/Whitea029"
     - name: bilibili
-      url: "https://space.bilibili.com/431274485?spm_id_from=333.1007.0.0"
-    - name: juejin
-      url: "https://juejin.cn/user/182960207956780"
+      url: "https://space.bilibili.com/431274485"
+    - name: leetcode 
+      url: "https://leetcode.cn/u/whitea-s/"
 
   analytics:
     google:
@@ -118,18 +122,18 @@ params:
     keys: ["title", "permalink", "summary", "content"]
 menu:
   main:
-    - identifier: Categories
-      name: Categories
-      url: /categories/
+    - identifier: Archives
+      name: Archives
+      url: /archives/
       weight: 10
     - identifier: Tags
       name: Tags
       url: /tags/
       weight: 20
-    - identifier: Archives
-      name: Archives
-      url: /archives/
-      weight: 5
+    # - identifier: search
+    #   name: search
+    #   url: /search/
+    #   weight: 5
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:

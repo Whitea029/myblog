@@ -20,5 +20,12 @@
       <guid>http://localhost:1313/tags/sast/</guid>
       <description></description>
     </item>
+    <item>
+      <title>Alg</title>
+      <link>http://localhost:1313/tags/alg/</link>
+      <pubDate>Thu, 20 Jun 2024 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/tags/alg/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

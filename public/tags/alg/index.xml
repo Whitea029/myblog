@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on Whitea&#39;s Blog</title>
-    <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on Whitea&#39;s Blog</description>
+    <title>Alg on Whitea&#39;s Blog</title>
+    <link>http://localhost:1313/tags/alg/</link>
+    <description>Recent content in Alg on Whitea&#39;s Blog</description>
     <image>
       <title>Whitea&#39;s Blog</title>
       <url>http://localhost:1313/assets/images/cover.jpg</url>
@@ -11,15 +11,8 @@
     </image>
     <generator>Hugo -- 0.140.2</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 15 Oct 2024 11:30:03 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>啥是后端，如何学呢 🤔</title>
-      <link>http://localhost:1313/posts/sast/first-lesson/</link>
-      <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/sast/first-lesson/</guid>
-      <description>SAST Web组 后端方向第一次授课</description>
-    </item>
+    <lastBuildDate>Thu, 20 Jun 2024 11:30:03 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/alg/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>KMP算法-来自leetcode-28的思考</title>
       <link>http://localhost:1313/posts/alg/kmp/</link>
