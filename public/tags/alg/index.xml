@@ -9,7 +9,7 @@
       <url>http://localhost:1313/assets/images/cover.jpg</url>
       <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
-    <generator>Hugo -- 0.140.2</generator>
+    <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Thu, 20 Jun 2024 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/alg/index.xml" rel="self" type="application/rss+xml" />

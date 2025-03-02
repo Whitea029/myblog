@@ -9,19 +9,26 @@
       <url>http://localhost:1313/assets/images/cover.jpg</url>
       <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
-    <generator>Hugo -- 0.140.2</generator>
+    <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 21 Nov 2024 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Feb 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Web组后端方向第七次课</title>
+      <title>SAST授课-入门Redis&amp;了解云原生</title>
+      <link>http://localhost:1313/posts/sast/2025-first-class/</link>
+      <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
+      <description>SASTWeb组2025后端方向第一次授课</description>
+    </item>
+    <item>
+      <title>SAST授课-SpringBoot入门</title>
       <link>http://localhost:1313/posts/sast/get-start-with-spring-boot/</link>
       <pubDate>Thu, 21 Nov 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/get-start-with-spring-boot/</guid>
       <description>Web组后端方向第七次课——SpringBoot入门</description>
     </item>
     <item>
-      <title>啥是后端，如何学呢 🤔</title>
+      <title>SAST授课-啥是后端，如何学呢 🤔</title>
       <link>http://localhost:1313/posts/sast/first-lesson/</link>
       <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/first-lesson/</guid>

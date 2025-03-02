@@ -9,7 +9,7 @@
       <url>http://localhost:1313/assets/images/cover.jpg</url>
       <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
-    <generator>Hugo -- 0.140.2</generator>
+    <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>

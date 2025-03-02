@@ -24,7 +24,7 @@ params:
   author: Whitea
   images: [/assets/images/cover.jpg]
   DateFormat: "January 2, 2006"
-  defaultTheme: auto # dark, light
+  defaultTheme: light # dark, light
   disableThemeToggle: false
 
   ShowReadingTime: true
