@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 27 Feb 2025 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 05 Mar 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SAST授课-从HTTP到RPC &amp; 服务发现与注册</title>
+      <link>http://localhost:1313/posts/sast/2025-second-class/</link>
+      <pubDate>Wed, 05 Mar 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sast/2025-second-class/</guid>
+      <description>SASTWeb组2025后端方向第二次授课</description>
+    </item>
     <item>
       <title>SAST授课-入门Redis&amp;了解云原生</title>
       <link>http://localhost:1313/posts/sast/2025-first-class/</link>

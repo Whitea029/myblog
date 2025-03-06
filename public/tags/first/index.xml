@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>First on Whitea&#39;s Blog</title>
     <link>http://localhost:1313/tags/first/</link>
     <description>Recent content in First on Whitea&#39;s Blog</description>
-    <generator>Hugo</generator>
+    <image>
+      <title>Whitea&#39;s Blog</title>
+      <url>http://localhost:1313/assets/images/cover.jpg</url>
+      <link>http://localhost:1313/assets/images/cover.jpg</link>
+    </image>
+    <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Tue, 15 Sep 2020 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/first/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My 1st post</title>
-      <link>http://localhost:1313/posts/sast/2025-first-class/</link>
+      <link>http://localhost:1313/posts/sast/2025-second-class/</link>
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
-      <description>&lt;h1 id=&#34;入门redis--了解dockerk8s&#34;&gt;入门Redis &amp;amp; 了解Docker、K8S&lt;/h1&gt;&#xA;&lt;h2 id=&#34;第一部分redis快速入门&#34;&gt;第一部分：Redis快速入门&lt;/h2&gt;&#xA;&lt;h3 id=&#34;初步认识&#34;&gt;初步认识&lt;/h3&gt;&#xA;&lt;p&gt;Redis 是一个开源（BSD 许可）的，&lt;strong&gt;内存中的键值对（K-V）存储系统&lt;/strong&gt;，它可以用作 数据库、缓存和消息中间件。 它支持多种类型的数据结构，如 字符串（strings），散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets） 与范围查询 bitmaps， hyperloglogs 和 地理空间（geospatial） 索引半径查询。 Redis 内置了复制（replication），LUA脚本（Lua scripting），LRU驱动事件（LRU eviction），事务（transactions）和不同级别的磁盘持久化（persistence）， 并通过Redis哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）&lt;/p&gt;&#xA;&lt;p&gt;你得知道：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Redis是Nosql型的非关系型数据库（Nosql：Not Only sql）&lt;/li&gt;&#xA;&lt;li&gt;Redis是基于内存存储的，速度快，当然也支持数据的持久化&lt;/li&gt;&#xA;&lt;li&gt;Redis是在处理客户端请求的时候是单线程的，在处理客户端连接时候使用IO多路复用技术&lt;/li&gt;&#xA;&lt;li&gt;Redis其实是支持事务的，但是一次性、顺序性、排他性的执行队列中的命令，是不支持回滚的，缺乏传统ACID事务的隔离性和持久性&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;Windows：&lt;/strong&gt; 官方推荐使用WSL2&lt;a href=&#34;https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/&#34;&gt;官网指南&lt;/a&gt;，当然也可以在&lt;a href=&#34;https://github.com/tporadowski/redis/releases&#34;&gt;Github&lt;/a&gt;上下载Zip,解压缩到本地，然后在安装目录执行&lt;code&gt;redis-server.exe redis.windows.conf&lt;/code&gt;即可临时启动&#xA;&lt;strong&gt;Linux &amp;amp; Mac：&lt;/strong&gt; 使用包管理器安装即可&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;但待会我们会将容器技术，这会让Redis的安装使用更加方便😀&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;常用命令&#34;&gt;常用命令&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;使用select切换数据库：&lt;code&gt;select [number]&lt;/code&gt; （redis共16个数据库）&lt;/li&gt;&#xA;&lt;li&gt;查看数据库大小：&lt;code&gt;DBSIZE&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;查看库内容：&lt;code&gt;keys *&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;判断某个值存在：&lt;code&gt;exists key&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;存储数据：&lt;code&gt;set key value&lt;/code&gt;云&lt;/li&gt;&#xA;&lt;li&gt;数据限时：&lt;code&gt;expire key number\setex key number value&lt;/code&gt;限时多少秒后数据失效，&lt;code&gt;ttl key&lt;/code&gt;查询还有多久截止&lt;/li&gt;&#xA;&lt;li&gt;查看key类型：&lt;code&gt;type key&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;删除数据库：&lt;code&gt;flushall or flushdb DbName&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;批量插入、获取：&lt;code&gt;mset k1 v1 k2 v2...\mget k1 k2 k3...&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;五大基本数据类型&#34;&gt;五大基本数据类型&lt;/h3&gt;&#xA;&lt;p&gt;不用记，用的时候查就行🤣&lt;/p&gt;</description>
+      <guid>http://localhost:1313/posts/sast/2025-second-class/</guid>
+      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>

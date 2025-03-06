@@ -41,5 +41,12 @@
       <guid>http://localhost:1313/posts/alg/kmp/</guid>
       <description>快来看看学了就会忘记的kmp吧</description>
     </item>
+    <item>
+      <title>My 1st post</title>
+      <link>http://localhost:1313/posts/sast/2025-second-class/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sast/2025-second-class/</guid>
+      <description>Desc Text.</description>
+    </item>
   </channel>
 </rss>

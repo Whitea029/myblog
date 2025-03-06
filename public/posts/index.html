@@ -35,7 +35,16 @@ The Roadmap to Becoming a Backend Java Developer | by Hussein Shamas | Medium
 计算机教育中缺失的一课 · the missing semester of your cs education (missing-semester-cn.github.io)
 ...</p></div><footer class=entry-footer><span title='2024-10-15 11:30:03 +0000 +0000'>October 15, 2024</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;226 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to SAST授课-啥是后端，如何学呢 🤔" href=http://localhost:1313/posts/sast/first-lesson/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>KMP算法-来自leetcode-28的思考</h2></header><div class=entry-content><p>本文的思考来自于leetcode-28.找出字符串中第一个匹配项的下标leetcode链接
 什么是KMP算法 在计算机科学中，克努斯-莫里斯-普拉特字符串查找算法（英语：Knuth–Morris–Pratt algorithm，简称为KMP算法）可在一个字符串S内查找一个词W的出现位置。一个词在不匹配时本身就包含足够的信息来确定下一个匹配可能的开始位置，此算法利用这一特性以避免重新检查先前配对的字符。（引用维基百科）
-...</p></div><footer class=entry-footer><span title='2024-06-20 11:30:03 +0000 +0000'>June 20, 2024</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;573 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to KMP算法-来自leetcode-28的思考" href=http://localhost:1313/posts/alg/kmp/></a></article></main><footer class=footer><span>&copy; 2025 <a href=http://localhost:1313/>Whitea's Blog</a></span> ·
+...</p></div><footer class=entry-footer><span title='2024-06-20 11:30:03 +0000 +0000'>June 20, 2024</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;573 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to KMP算法-来自leetcode-28的思考" href=http://localhost:1313/posts/alg/kmp/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>My 1st post</h2></header><div class=entry-content><p>从HTTP到RPC & 服务发现与注册 我想先说说 TCP 大家如果在开发时候遇到希望不同进程可以通讯，常用到的就是 Socket 编程，这是一种面向传输层的网络编程方式，无非就是 TCP 或者 UDP。 大部分人无脑选择 TCP 就好了
+这是一种基于字节流的传输方式，就这样一个裸的TCP就可以解决我们收发数据的全部问题了么？
+裸TCP的问题 八股文常背，TCP 是有三个特点，面向连接、可靠、基于字节流 我们今天重点关注的是基于字节流这个特点 字节流可以理解成一个双向通道里面流淌的数据，也就是我们常说的二进制数据，说白了也就是一串01串，纯裸 TCP 在收发这一堆 01 串的时候是没有任何边界的， 它根本不知道从哪到哪才是一条完整的消息。
+上面这张图就是粘包问题 因此很显然，纯裸的 TCP 是不适合直接拿过来用的，需要制定一些规则用于区分消息的边界 比如我们可以把消息封装一下，分为 Header 和 Body, Header 用于存放一些元数据，比如这个消息有多长， Body 用于存放真正的消息
+这样封装方式，只要收发信息的上下游约定好，这就是所谓的协议 因此基于 TCP 就衍生出很多的协议，比如 HTTP 和 RPC
+HTTP 和 RPC HTTP协议：超文本传输协议 （HTTP） 是一种用于传输超媒体文档（如 HTML）的应用层协议。它专为 Web 浏览器和 Web 服务器之间的通信而设计，但也可用于其他目的，例如机器对机器通信、对 API 的编程访问等
+RPC：RPC协议是一种通过网络调用远程服务的方法，使得不同系统间可以像调用本地方法一样进行通信
+这两个都是应用层协议，了解微服务的同学应该知道，常常在服务内部一般都会使用 RPC 协议进行服务间通讯，而不是使用 HTTP。要弄懂这个需要从这两个协议的设计原理出发了。
+HTTP 协议 HTTP的请求报文由四部分组成：请求行(request line)、请求头部(header)、空行和请求数据(request data)
+...</p></div><footer class=entry-footer><span title='2020-09-15 11:30:03 +0000 +0000'>September 15, 2020</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;467 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to My 1st post" href=http://localhost:1313/posts/sast/2025-second-class/></a></article></main><footer class=footer><span>&copy; 2025 <a href=http://localhost:1313/>Whitea's Blog</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
         <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
