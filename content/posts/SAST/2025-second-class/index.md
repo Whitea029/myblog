@@ -300,3 +300,9 @@ struct Person {
 
 ![](images/2025-second-class/019.png)
 
+### 注册中心
+
+- Consul https://github.com/hashicorp/consul
+- Nacos https://github.com/alibaba/nacos
+- etcd https://github.com/etcd-io/etcd
+- zookeeper https://github.com/apache/zookeeper
