@@ -2,51 +2,58 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Whitea&#39;s Blog</title>
-    <link>http://localhost:34889/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Whitea&#39;s Blog</description>
     <image>
       <title>Whitea&#39;s Blog</title>
-      <url>http://localhost:34889/assets/images/cover.jpg</url>
-      <link>http://localhost:34889/assets/images/cover.jpg</link>
+      <url>http://localhost:1313/assets/images/cover.jpg</url>
+      <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Wed, 05 Mar 2025 11:30:03 +0000</lastBuildDate>
-    <atom:link href="http://localhost:34889/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>SAST授课-从HTTP到RPC &amp; 服务发现与注册</title>
-      <link>http://localhost:34889/posts/sast/2025-second-class/</link>
+      <link>http://localhost:1313/posts/sast/2025-second-class/</link>
       <pubDate>Wed, 05 Mar 2025 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/posts/sast/2025-second-class/</guid>
+      <guid>http://localhost:1313/posts/sast/2025-second-class/</guid>
       <description>SASTWeb组2025后端方向第二次授课</description>
     </item>
     <item>
       <title>SAST授课-入门Redis&amp;了解云原生</title>
-      <link>http://localhost:34889/posts/sast/2025-first-class/</link>
+      <link>http://localhost:1313/posts/sast/2025-first-class/</link>
       <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/posts/sast/2025-first-class/</guid>
+      <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
       <description>SASTWeb组2025后端方向第一次授课</description>
     </item>
     <item>
       <title>SAST授课-SpringBoot入门</title>
-      <link>http://localhost:34889/posts/sast/get-start-with-spring-boot/</link>
+      <link>http://localhost:1313/posts/sast/get-start-with-spring-boot/</link>
       <pubDate>Thu, 21 Nov 2024 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/posts/sast/get-start-with-spring-boot/</guid>
+      <guid>http://localhost:1313/posts/sast/get-start-with-spring-boot/</guid>
       <description>Web组后端方向第七次课——SpringBoot入门</description>
     </item>
     <item>
       <title>SAST授课-啥是后端，如何学呢 🤔</title>
-      <link>http://localhost:34889/posts/sast/first-lesson/</link>
+      <link>http://localhost:1313/posts/sast/first-lesson/</link>
       <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/posts/sast/first-lesson/</guid>
+      <guid>http://localhost:1313/posts/sast/first-lesson/</guid>
       <description>SAST Web组 后端方向第一次授课</description>
     </item>
     <item>
       <title>KMP算法-来自leetcode-28的思考</title>
-      <link>http://localhost:34889/posts/alg/kmp/</link>
+      <link>http://localhost:1313/posts/alg/kmp/</link>
       <pubDate>Thu, 20 Jun 2024 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/posts/alg/kmp/</guid>
+      <guid>http://localhost:1313/posts/alg/kmp/</guid>
       <description>快来看看学了就会忘记的kmp吧</description>
+    </item>
+    <item>
+      <title>分布式定时任务</title>
+      <link>http://localhost:1313/posts/distributed/scheduled-tasks/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/scheduled-tasks/</guid>
+      <description>分布式定时任务</description>
     </item>
   </channel>
 </rss>

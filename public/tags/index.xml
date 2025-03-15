@@ -2,29 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Whitea&#39;s Blog</title>
-    <link>http://localhost:34889/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Whitea&#39;s Blog</description>
     <image>
       <title>Whitea&#39;s Blog</title>
-      <url>http://localhost:34889/assets/images/cover.jpg</url>
-      <link>http://localhost:34889/assets/images/cover.jpg</link>
+      <url>http://localhost:1313/assets/images/cover.jpg</url>
+      <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Thu, 27 Feb 2025 11:30:03 +0000</lastBuildDate>
-    <atom:link href="http://localhost:34889/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>SAST</title>
-      <link>http://localhost:34889/tags/sast/</link>
+      <link>http://localhost:1313/tags/sast/</link>
       <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/tags/sast/</guid>
+      <guid>http://localhost:1313/tags/sast/</guid>
       <description></description>
     </item>
     <item>
       <title>Alg</title>
-      <link>http://localhost:34889/tags/alg/</link>
+      <link>http://localhost:1313/tags/alg/</link>
       <pubDate>Thu, 20 Jun 2024 11:30:03 +0000</pubDate>
-      <guid>http://localhost:34889/tags/alg/</guid>
+      <guid>http://localhost:1313/tags/alg/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>分布式</title>
+      <link>http://localhost:1313/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</guid>
       <description></description>
     </item>
   </channel>

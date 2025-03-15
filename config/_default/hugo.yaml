@@ -19,8 +19,8 @@ minify:
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: Whitea's Blog
-  description: I'm a passionate student focused on web backend development and deeply enthusiastic about open-source projects. I love learning, sharing knowledge, and exploring new technologies. Beyond coding, I'm also a badminton enthusiast, finding energy and balance through sports. Let's connect and share ideas about coding and life!
-  keywords: [Blog, Portfolio, PaperMod]
+  description: Whitea的个人博客分享计算机Web开发技术、最新技术趋势与实用教程，同时记录我的生活点滴与成长经历。探索编程、技术创新和个人成长的精彩故事。
+  keywords: [Whitea,青柚工作室,Qingyou Studio,Blog,Go,Java,Web,Backend,Open-source,Technology,Life]
   author: Whitea
   images: [/assets/images/cover.jpg]
   DateFormat: "January 2, 2006"
