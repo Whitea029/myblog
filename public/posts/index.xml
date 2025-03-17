@@ -49,11 +49,11 @@
       <description>快来看看学了就会忘记的kmp吧</description>
     </item>
     <item>
-      <title>分布式定时任务</title>
-      <link>http://localhost:1313/posts/distributed/scheduled-tasks/</link>
+      <title>My 1st post</title>
+      <link>http://localhost:1313/posts/golang/interface/</link>
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/distributed/scheduled-tasks/</guid>
-      <description>分布式定时任务</description>
+      <guid>http://localhost:1313/posts/golang/interface/</guid>
+      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>

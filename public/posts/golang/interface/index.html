@@ -1,0 +1,334 @@
+<!doctype html><html lang=en dir=auto><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>硬核——你真的搞定Golang接口了么 | Whitea's Blog</title>
+<meta name=keywords content="Go"><meta name=description content="“关于golang类型系统、接口、类型断言的学习与思考”"><meta name=author content="Whitea"><link rel=canonical href=https://canonical.url/to/page><meta name=google-site-verification content="XYZabc"><meta name=yandex-verification content="XYZabc"><meta name=msvalidate.01 content="XYZabc"><link crossorigin=anonymous href=/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as=style><link rel=icon href=http://localhost:1313/images/favicon.ico><link rel=icon type=image/png sizes=16x16 href=http://localhost:1313/images/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=http://localhost:1313/images/favicon-32x32.png><link rel=apple-touch-icon href=http://localhost:1313/images/apple-touch-icon.png><link rel=mask-icon href=http://localhost:1313/%3Clink%20/%20abs%20url%3E><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=http://localhost:1313/posts/golang/interface/><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:url" content="http://localhost:1313/posts/golang/interface/"><meta property="og:site_name" content="Whitea's Blog"><meta property="og:title" content="硬核——你真的搞定Golang接口了么"><meta property="og:description" content="“关于golang类型系统、接口、类型断言的学习与思考”"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-03-16T11:30:03+00:00"><meta property="article:modified_time" content="2025-03-16T11:30:03+00:00"><meta property="article:tag" content="Go"><meta property="og:image" content="http://localhost:1313/%3Cimage%20path/url%3E"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://localhost:1313/%3Cimage%20path/url%3E"><meta name=twitter:title content="硬核——你真的搞定Golang接口了么"><meta name=twitter:description content="“关于golang类型系统、接口、类型断言的学习与思考”"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://localhost:1313/posts/"},{"@type":"ListItem","position":2,"name":"硬核——你真的搞定Golang接口了么","item":"http://localhost:1313/posts/golang/interface/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"硬核——你真的搞定Golang接口了么","name":"硬核——你真的搞定Golang接口了么","description":"“关于golang类型系统、接口、类型断言的学习与思考”","keywords":["Go"],"articleBody":"编译阶段有变量、类型、方法等，那在运行阶段反射、接口、类型断言这些语言特性或机制是怎么动态的获取数据类型信息呢？今天我们就来聊聊这些问题吧😀\n类型系统 首先我们要知道在Go中，这些属于内置类型：\n1 2 3 4 5 6 7 8 9 10 bool int(32 or 64), int8, int16, int32, int64 uint(32 or 64), uint8(byte), uint16, uint32, uint64 float32, float64 string complex64, complex128 array -- 固定长度的数组 slice -- 序列数组 map -- 映射 chan -- 管道 当然还有自定义类型，比如：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 // custom type based on int type T int // that is different from the one below // type T = int // that just a alias for T, it's type is still int // struct type T struct { name string\t} // interface type T interface { Name() string } Go不允许为内置类型添加方法，同时接口类型是无效的方法接收者。\n数据类型虽然多，但是无论是内置类型还是自定义类型，都有对应的类型描述信息，称之为类型元数据， 每种类型元数据都是全局唯一的，这些类型元数据共同构成了Go的类型系统。 在Go源码中即为runtime._type，这是Go类型的运行时表示。\n目前迁移到 internal/abi/type.go下\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 // runtime._type type _type struct { size uintptr ptrdata uintptr hash uint32 tflag tflag align uint8 fieldAlign uint8 kind uint8 equal func(unsafe.Pointer, unsafe.Pointer) bool gcdata *byte str nameOff ptrToThis typeOff } 这相当于是类型的Header，当然不同的数据类型还需要一些额外的描述信息 例如sliceType类型有一个*_type类型的变量，指向切片中元素类型的元数据 []stirng类型这里的Elem所指向的类型就是string的类型元数据\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 // slicetype type SliceType struct { Type Elem *Type // slice element type } // maptype type MapType struct { Type Key *Type Elem *Type Bucket *Type // internal type representing a hash bucket // function for hashing keys (ptr to key, seed) -\u003e hash Hasher func(unsafe.Pointer, uintptr) uintptr KeySize uint8 // size of key slot ValueSize uint8 // size of elem slot BucketSize uint16 // size of bucket Flags uint32 } // functype type FuncType struct { Type InCount uint16 OutCount uint16 // top bit is set if last input parameter is ... } // interfacetype type InterfaceType struct { Type PkgPath Name // import path Methods []Imethod // sorted by hash } ... 但如果是自定义类型，会有一个uncommontype用于记录一些额外的描述信息\n1 2 3 4 5 6 7 type UncommonType struct { PkgPath NameOff // import path; empty for built-in types like int, string Mcount uint16 // number of methods Xcount uint16 // number of exported methods Moff uint32 // offset from this uncommontype to [mcount]Method _ uint32 // unused } 比如这里的Moff就记录这些方法元数据组成的数组相对于这个uncommontype结构体偏移了多少个字节，进而我们就可以找到对应的方法元数据\n1 2 3 4 5 6 type Method struct { Name NameOff // name of method Mtyp TypeOff // method type (without receiver) Ifn TextOff // fn used in interface call (one-word receiver) Tfn TextOff // fn used for normal method call } 因此记忆下来的话类型信息就是_type加上一堆额外的信息罢了\n1 2 3 4 type T struct{ Type // meta data ... // extra data } 那就认识一下接口吧 Go 语言使用runtime.iface表示第一种接口，使用runtime.eface表示第二种不包含任何方法的接口 interface{}，两种接口虽然都使用interface声明，但是由于后者在Go中很常见，所以在实现时使用了特殊的类型从但单独区分出来。\n空接口 1 2 3 4 type eface struct { _type *_type // dynamic type data unsafe.Pointer// dynamic data } 当初始化的时候var a interface{}，_type 和 data 都为nil，但当我们为其赋值的时候 比如赋值*os.File给这个空接口，_type就会指向这个自定义类型的类型元数据，data就会直接被这个指针赋值。\n非空接口 其实就是有方法列表的接口类型，如果一个变量要想赋值给一个非空接口类型，必须要实现该接口要求的所有方法才行。 1 2 3 4 type iface struct { tab *itab // method list, dynamic type ... data unsafe.Pointer // dynamic data } 与空接口一样，data一定存储实现这个接口的动态值，因此接口所要实现的方法列表以及动态类型信息等等那就只能存储在这个*itab里面啦\n1 2 3 4 5 6 type ITab struct { Inter *InterfaceType Type *Type Hash uint32 // copy of Type.Hash. Used for type switches. Fun [1]uintptr // variable sized. fun[0]==0 means Type does not implement Inter. } 例如我们初始化一个io.ReadWriter的接口，tab 和 data 都为nil，但当我们为其赋值*os.File的时候，data就会直接被这个指针赋值，而tab会指向一个itab的结构体，inter指向io.ReadWriter的接口信息，type指向*os.File的类型元信息，hash为类型元数据中拷贝的哈希，fun为各个方法的地址的拷贝 itab缓存 但关于itab要重点强调的是，一旦接口类型确定了，动态类型的元信息确定了，那么itab的内容就不会改变了，所以itab是可以复用的，所以Go运行的时候会把用到的iteb结构体缓存起来，并且以\u003c接口类型，动态类型\u003e为key，iteb为value构建出一个哈希表。这里使用itabHashFunc方法得到key进行查找，如果有就直接使用，没有就会创建新的itab结构体添加到这个哈希表中\n1 2 3 4 5 6 7 8 9 10 11 // Note: change the formula in the mallocgc call in itabAdd if you change these fields. type itabTableType struct { size uintptr // length of entries array. Always a power of 2. count uintptr // current number of filled entries. entries [itabInitSize]*itab // really [size] large } func itabHashFunc(inter *interfacetype, typ *_type) uintptr { // compiler has provided some good hash codes for us. return uintptr(inter.Type.Hash ^ typ.Hash) } 类型断言 刚刚聊过了空接口和非空接口两种接口，而类型断言就是作用在接口值之上\n1 接口或者非空接口.(具体类型或非空接口类型) 这就排列组合出来了4种类型断言，那我们就逐一来看看，他们是怎样进行类型断言的\n空接口.(具体类型) 1 2 3 4 type eface struct { _type *_type // dynamic type data unsafe.Pointer// dynamic data } 我们先回顾一下空接口，显然，类型断言的时候只需要检查这里的_type是否是具体类型的类型元数据即可\n1 2 3 4 var e interface{} f := \"whitea\" e = f r, ok := e.(*os.File) 这里data就会被f赋值，类型元数据是全局唯一的，这里也是对的上的，所以断言成功，r即为f,ok为true\n1 2 3 4 var e interface{} f := \"whitea\" e = f r, ok := e.(string) 这里由于类型元数据对不上，因此r即为nil,ok为false\n非空接口.(具体类型) 1 2 3 4 type iface struct { tab *itab // method list, dynamic type ... data unsafe.Pointer // dynamic data } 同样先把非空接口类型的结构拿过来，之前说到过所有的itab结构体都会被缓存起来，然后通过\u003c接口类型，类型元数据\u003e为key缓存，所以这里也是只需要计算一下key的位置，比较一次即可\n1 2 3 4 var rw io.ReadWriter f, _ := os.Open(\"whitea.md\") re = f r, ok := rw.(*os.File) 这里data就会被f赋值，类型元数据和接口类型哈希异或运算后查找itab也能对的上，所以断言成功，r即为f,ok为true\n1 2 3 4 var rw io.ReadWriter f ：= whitea{name: \"whitea\"} re = f r, ok := rw.(*os.File) 这里data就会被f赋值，类型元数据和接口类型哈希异或运算后查找itab的类型元数据不一样，itab对不上，所以断言失败，r即为nil,ok为false\n空接口.(非空接口) 同理是需要比较_type是否一致，但是这里还需要比较这个类型是否实现了非空接口类型的所有方法，因此还涉及到itab查找以及fun数组的比较等操作 但是这里值得一提的是，比较失败的itab结构体也会被缓存起来，同时fun[0] = 0用于表示这个动态类型并没有实现对应的接口，这样之后再次遇到同种的类型断言时候就可以直接返回false了，就不用再去检查方法列表了。\n非空接口.(非空接口) 这里同样不仅仅需要比较itab里面的类型元数据，也要比较itab里面的接口类型和方法列表是否都实现了，这同样涉及去缓存里面寻找。 1 2 3 4 var w io.Writer f, _ := os.Open(\"whitea.md\") re = f r, ok := rw.(*os.File) 这里是断言成功的\n1 2 3 4 5 6 7 8 9 10 11 12 var rw io.ReadWriter f ：= whitea{name: \"whitea\"} re = f r, ok := rw.(*os.File) type whitea struct { name string } func (w whitea) Write(b []byte) (n int, err error) { return len(w.name), nil } 这里的自定义类型只实现了Write接口，还有Read接口没有实现，因此类型断言失败，这个itab被缓存起来，r即为nil,ok为false\n因此类型断言的关键就在于明确接口的动态类型(_type)以及对应的类型实现了哪些方法。而需要明确这些则依赖与类型元数据以及空接口和非空接口的“数据接口”\nOK！Go的类型系统、接口、类型断言就先讲到这里。\n作为一名小白Gopher,有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题🤗\n","wordCount":"809","inLanguage":"en","image":"http://localhost:1313/%3Cimage%20path/url%3E","datePublished":"2025-03-16T11:30:03Z","dateModified":"2025-03-16T11:30:03Z","author":{"@type":"Person","name":"Whitea"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:1313/posts/golang/interface/"},"publisher":{"@type":"Organization","name":"Whitea's Blog","logo":{"@type":"ImageObject","url":"http://localhost:1313/images/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=http://localhost:1313/ accesskey=h title="Home (Alt + H)"><img src=http://localhost:1313/apple-touch-icon.png alt aria-label=logo height=35>Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=http://localhost:1313/archives/ title=Archives><span>Archives</span></a></li><li><a href=http://localhost:1313/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=http://localhost:1313/>Home</a>&nbsp;»&nbsp;<a href=http://localhost:1313/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">硬核——你真的搞定Golang接口了么</h1><div class=post-description>“关于golang类型系统、接口、类型断言的学习与思考”</div><div class=post-meta><span title='2025-03-16 11:30:03 +0000 +0000'>March 16, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;809 words&nbsp;·&nbsp;Whitea&nbsp;|&nbsp;<a href=https://github.com/Whitea029/myblog/blob/main/content/posts/golang/interface/index.md rel="noopener noreferrer" target=_blank>Source Code</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#类型系统>类型系统</a></li><li><a href=#那就认识一下接口吧>那就认识一下接口吧</a></li><li><a href=#类型断言>类型断言</a></li></ul></nav></div></details></div><div class=post-content><p>编译阶段有变量、类型、方法等，那在运行阶段反射、接口、类型断言这些语言特性或机制是怎么动态的获取数据类型信息呢？今天我们就来聊聊这些问题吧😀</p><h2 id=类型系统>类型系统<a hidden class=anchor aria-hidden=true href=#类型系统>#</a></h2><p>首先我们要知道在Go中，这些属于内置类型：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-0-1><a class=lnlinks href=#hl-0-1> 1</a>
+</span><span class=lnt id=hl-0-2><a class=lnlinks href=#hl-0-2> 2</a>
+</span><span class=lnt id=hl-0-3><a class=lnlinks href=#hl-0-3> 3</a>
+</span><span class=lnt id=hl-0-4><a class=lnlinks href=#hl-0-4> 4</a>
+</span><span class=lnt id=hl-0-5><a class=lnlinks href=#hl-0-5> 5</a>
+</span><span class=lnt id=hl-0-6><a class=lnlinks href=#hl-0-6> 6</a>
+</span><span class=lnt id=hl-0-7><a class=lnlinks href=#hl-0-7> 7</a>
+</span><span class=lnt id=hl-0-8><a class=lnlinks href=#hl-0-8> 8</a>
+</span><span class=lnt id=hl-0-9><a class=lnlinks href=#hl-0-9> 9</a>
+</span><span class=lnt id=hl-0-10><a class=lnlinks href=#hl-0-10>10</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>bool
+</span></span><span class=line><span class=cl>int(32 or 64), int8, int16, int32, int64
+</span></span><span class=line><span class=cl>uint(32 or 64), uint8(byte), uint16, uint32, uint64
+</span></span><span class=line><span class=cl>float32, float64
+</span></span><span class=line><span class=cl>string
+</span></span><span class=line><span class=cl>complex64, complex128
+</span></span><span class=line><span class=cl>array    -- 固定长度的数组
+</span></span><span class=line><span class=cl>slice   -- 序列数组
+</span></span><span class=line><span class=cl>map     -- 映射
+</span></span><span class=line><span class=cl>chan    -- 管道
+</span></span></code></pre></td></tr></table></div></div><p>当然还有自定义类型，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-1-1><a class=lnlinks href=#hl-1-1> 1</a>
+</span><span class=lnt id=hl-1-2><a class=lnlinks href=#hl-1-2> 2</a>
+</span><span class=lnt id=hl-1-3><a class=lnlinks href=#hl-1-3> 3</a>
+</span><span class=lnt id=hl-1-4><a class=lnlinks href=#hl-1-4> 4</a>
+</span><span class=lnt id=hl-1-5><a class=lnlinks href=#hl-1-5> 5</a>
+</span><span class=lnt id=hl-1-6><a class=lnlinks href=#hl-1-6> 6</a>
+</span><span class=lnt id=hl-1-7><a class=lnlinks href=#hl-1-7> 7</a>
+</span><span class=lnt id=hl-1-8><a class=lnlinks href=#hl-1-8> 8</a>
+</span><span class=lnt id=hl-1-9><a class=lnlinks href=#hl-1-9> 9</a>
+</span><span class=lnt id=hl-1-10><a class=lnlinks href=#hl-1-10>10</a>
+</span><span class=lnt id=hl-1-11><a class=lnlinks href=#hl-1-11>11</a>
+</span><span class=lnt id=hl-1-12><a class=lnlinks href=#hl-1-12>12</a>
+</span><span class=lnt id=hl-1-13><a class=lnlinks href=#hl-1-13>13</a>
+</span><span class=lnt id=hl-1-14><a class=lnlinks href=#hl-1-14>14</a>
+</span><span class=lnt id=hl-1-15><a class=lnlinks href=#hl-1-15>15</a>
+</span><span class=lnt id=hl-1-16><a class=lnlinks href=#hl-1-16>16</a>
+</span><span class=lnt id=hl-1-17><a class=lnlinks href=#hl-1-17>17</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// custom type based on int</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>T</span> <span class=kt>int</span> 
+</span></span><span class=line><span class=cl><span class=c1>// that is different from the one below</span>
+</span></span><span class=line><span class=cl><span class=c1>// type T = int</span>
+</span></span><span class=line><span class=cl><span class=c1>// that just a alias for T, it&#39;s type is still int</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// struct</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>T</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>name</span> <span class=kt>string</span>	
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// interface</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>T</span> <span class=kd>interface</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>Name</span><span class=p>()</span> <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Go不允许为内置类型添加方法，同时接口类型是无效的方法接收者。</p><p>数据类型虽然多，但是无论是内置类型还是自定义类型，都有对应的类型描述信息，称之为<strong>类型元数据</strong>，
+每种类型元数据都是全局唯一的，这些类型元数据共同构成了Go的类型系统。
+在Go源码中即为<code>runtime._type</code>，这是Go类型的运行时表示。</p><blockquote><p>目前迁移到 internal/abi/type.go下</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-2-1><a class=lnlinks href=#hl-2-1> 1</a>
+</span><span class=lnt id=hl-2-2><a class=lnlinks href=#hl-2-2> 2</a>
+</span><span class=lnt id=hl-2-3><a class=lnlinks href=#hl-2-3> 3</a>
+</span><span class=lnt id=hl-2-4><a class=lnlinks href=#hl-2-4> 4</a>
+</span><span class=lnt id=hl-2-5><a class=lnlinks href=#hl-2-5> 5</a>
+</span><span class=lnt id=hl-2-6><a class=lnlinks href=#hl-2-6> 6</a>
+</span><span class=lnt id=hl-2-7><a class=lnlinks href=#hl-2-7> 7</a>
+</span><span class=lnt id=hl-2-8><a class=lnlinks href=#hl-2-8> 8</a>
+</span><span class=lnt id=hl-2-9><a class=lnlinks href=#hl-2-9> 9</a>
+</span><span class=lnt id=hl-2-10><a class=lnlinks href=#hl-2-10>10</a>
+</span><span class=lnt id=hl-2-11><a class=lnlinks href=#hl-2-11>11</a>
+</span><span class=lnt id=hl-2-12><a class=lnlinks href=#hl-2-12>12</a>
+</span><span class=lnt id=hl-2-13><a class=lnlinks href=#hl-2-13>13</a>
+</span><span class=lnt id=hl-2-14><a class=lnlinks href=#hl-2-14>14</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// runtime._type</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>_type</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>size</span>       <span class=kt>uintptr</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ptrdata</span>    <span class=kt>uintptr</span>
+</span></span><span class=line><span class=cl>	<span class=nx>hash</span>       <span class=kt>uint32</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tflag</span>      <span class=nx>tflag</span>
+</span></span><span class=line><span class=cl>	<span class=nx>align</span>      <span class=kt>uint8</span>
+</span></span><span class=line><span class=cl>	<span class=nx>fieldAlign</span> <span class=kt>uint8</span>
+</span></span><span class=line><span class=cl>	<span class=nx>kind</span>       <span class=kt>uint8</span>
+</span></span><span class=line><span class=cl>	<span class=nx>equal</span>      <span class=kd>func</span><span class=p>(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span><span class=p>,</span> <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span><span class=p>)</span> <span class=kt>bool</span>
+</span></span><span class=line><span class=cl>	<span class=nx>gcdata</span>     <span class=o>*</span><span class=kt>byte</span>
+</span></span><span class=line><span class=cl>	<span class=nx>str</span>        <span class=nx>nameOff</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ptrToThis</span>  <span class=nx>typeOff</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这相当于是类型的Header，当然不同的数据类型还需要<strong>一些额外的描述信息</strong>
+例如<code>sliceType</code>类型有一个<code>*_type</code>类型的变量，指向切片中元素类型的元数据
+<code>[]stirng</code>类型这里的Elem所指向的类型就是string的类型元数据</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-3-1><a class=lnlinks href=#hl-3-1> 1</a>
+</span><span class=lnt id=hl-3-2><a class=lnlinks href=#hl-3-2> 2</a>
+</span><span class=lnt id=hl-3-3><a class=lnlinks href=#hl-3-3> 3</a>
+</span><span class=lnt id=hl-3-4><a class=lnlinks href=#hl-3-4> 4</a>
+</span><span class=lnt id=hl-3-5><a class=lnlinks href=#hl-3-5> 5</a>
+</span><span class=lnt id=hl-3-6><a class=lnlinks href=#hl-3-6> 6</a>
+</span><span class=lnt id=hl-3-7><a class=lnlinks href=#hl-3-7> 7</a>
+</span><span class=lnt id=hl-3-8><a class=lnlinks href=#hl-3-8> 8</a>
+</span><span class=lnt id=hl-3-9><a class=lnlinks href=#hl-3-9> 9</a>
+</span><span class=lnt id=hl-3-10><a class=lnlinks href=#hl-3-10>10</a>
+</span><span class=lnt id=hl-3-11><a class=lnlinks href=#hl-3-11>11</a>
+</span><span class=lnt id=hl-3-12><a class=lnlinks href=#hl-3-12>12</a>
+</span><span class=lnt id=hl-3-13><a class=lnlinks href=#hl-3-13>13</a>
+</span><span class=lnt id=hl-3-14><a class=lnlinks href=#hl-3-14>14</a>
+</span><span class=lnt id=hl-3-15><a class=lnlinks href=#hl-3-15>15</a>
+</span><span class=lnt id=hl-3-16><a class=lnlinks href=#hl-3-16>16</a>
+</span><span class=lnt id=hl-3-17><a class=lnlinks href=#hl-3-17>17</a>
+</span><span class=lnt id=hl-3-18><a class=lnlinks href=#hl-3-18>18</a>
+</span><span class=lnt id=hl-3-19><a class=lnlinks href=#hl-3-19>19</a>
+</span><span class=lnt id=hl-3-20><a class=lnlinks href=#hl-3-20>20</a>
+</span><span class=lnt id=hl-3-21><a class=lnlinks href=#hl-3-21>21</a>
+</span><span class=lnt id=hl-3-22><a class=lnlinks href=#hl-3-22>22</a>
+</span><span class=lnt id=hl-3-23><a class=lnlinks href=#hl-3-23>23</a>
+</span><span class=lnt id=hl-3-24><a class=lnlinks href=#hl-3-24>24</a>
+</span><span class=lnt id=hl-3-25><a class=lnlinks href=#hl-3-25>25</a>
+</span><span class=lnt id=hl-3-26><a class=lnlinks href=#hl-3-26>26</a>
+</span><span class=lnt id=hl-3-27><a class=lnlinks href=#hl-3-27>27</a>
+</span><span class=lnt id=hl-3-28><a class=lnlinks href=#hl-3-28>28</a>
+</span><span class=lnt id=hl-3-29><a class=lnlinks href=#hl-3-29>29</a>
+</span><span class=lnt id=hl-3-30><a class=lnlinks href=#hl-3-30>30</a>
+</span><span class=lnt id=hl-3-31><a class=lnlinks href=#hl-3-31>31</a>
+</span><span class=lnt id=hl-3-32><a class=lnlinks href=#hl-3-32>32</a>
+</span><span class=lnt id=hl-3-33><a class=lnlinks href=#hl-3-33>33</a>
+</span><span class=lnt id=hl-3-34><a class=lnlinks href=#hl-3-34>34</a>
+</span><span class=lnt id=hl-3-35><a class=lnlinks href=#hl-3-35>35</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// slicetype</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>SliceType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Elem</span> <span class=o>*</span><span class=nx>Type</span> <span class=c1>// slice element type</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// maptype</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>MapType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Key</span>    <span class=o>*</span><span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Elem</span>   <span class=o>*</span><span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Bucket</span> <span class=o>*</span><span class=nx>Type</span> <span class=c1>// internal type representing a hash bucket</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// function for hashing keys (ptr to key, seed) -&gt; hash</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Hasher</span>     <span class=kd>func</span><span class=p>(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span><span class=p>,</span> <span class=kt>uintptr</span><span class=p>)</span> <span class=kt>uintptr</span>
+</span></span><span class=line><span class=cl>	<span class=nx>KeySize</span>    <span class=kt>uint8</span>  <span class=c1>// size of key slot</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ValueSize</span>  <span class=kt>uint8</span>  <span class=c1>// size of elem slot</span>
+</span></span><span class=line><span class=cl>	<span class=nx>BucketSize</span> <span class=kt>uint16</span> <span class=c1>// size of bucket</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Flags</span>      <span class=kt>uint32</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// functype</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>FuncType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>InCount</span>  <span class=kt>uint16</span>
+</span></span><span class=line><span class=cl>	<span class=nx>OutCount</span> <span class=kt>uint16</span> <span class=c1>// top bit is set if last input parameter is ...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// interfacetype</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>InterfaceType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>PkgPath</span> <span class=nx>Name</span>      <span class=c1>// import path</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Methods</span> <span class=p>[]</span><span class=nx>Imethod</span> <span class=c1>// sorted by hash</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>...</span>
+</span></span></code></pre></td></tr></table></div></div><p>但如果是自定义类型，会有一个<code>uncommontype</code>用于记录一些额外的描述信息</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-4-1><a class=lnlinks href=#hl-4-1>1</a>
+</span><span class=lnt id=hl-4-2><a class=lnlinks href=#hl-4-2>2</a>
+</span><span class=lnt id=hl-4-3><a class=lnlinks href=#hl-4-3>3</a>
+</span><span class=lnt id=hl-4-4><a class=lnlinks href=#hl-4-4>4</a>
+</span><span class=lnt id=hl-4-5><a class=lnlinks href=#hl-4-5>5</a>
+</span><span class=lnt id=hl-4-6><a class=lnlinks href=#hl-4-6>6</a>
+</span><span class=lnt id=hl-4-7><a class=lnlinks href=#hl-4-7>7</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>UncommonType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>PkgPath</span> <span class=nx>NameOff</span> <span class=c1>// import path; empty for built-in types like int, string</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Mcount</span>  <span class=kt>uint16</span>  <span class=c1>// number of methods</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Xcount</span>  <span class=kt>uint16</span>  <span class=c1>// number of exported methods</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Moff</span>    <span class=kt>uint32</span>  <span class=c1>// offset from this uncommontype to [mcount]Method</span>
+</span></span><span class=line><span class=cl>	<span class=nx>_</span>       <span class=kt>uint32</span>  <span class=c1>// unused</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>比如这里的Moff就记录这些<strong>方法元数据组成的数组</strong>相对于这个uncommontype结构体偏移了多少个字节，进而我们就可以找到对应的方法元数据</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-5-1><a class=lnlinks href=#hl-5-1>1</a>
+</span><span class=lnt id=hl-5-2><a class=lnlinks href=#hl-5-2>2</a>
+</span><span class=lnt id=hl-5-3><a class=lnlinks href=#hl-5-3>3</a>
+</span><span class=lnt id=hl-5-4><a class=lnlinks href=#hl-5-4>4</a>
+</span><span class=lnt id=hl-5-5><a class=lnlinks href=#hl-5-5>5</a>
+</span><span class=lnt id=hl-5-6><a class=lnlinks href=#hl-5-6>6</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Method</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Name</span> <span class=nx>NameOff</span> <span class=c1>// name of method</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Mtyp</span> <span class=nx>TypeOff</span> <span class=c1>// method type (without receiver)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Ifn</span>  <span class=nx>TextOff</span> <span class=c1>// fn used in interface call (one-word receiver)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Tfn</span>  <span class=nx>TextOff</span> <span class=c1>// fn used for normal method call</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><img loading=lazy src=/posts/golang/interface/001.png></p><p>因此记忆下来的话类型信息<strong>就是<code>_type</code>加上一堆额外的信息罢了</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-6-1><a class=lnlinks href=#hl-6-1>1</a>
+</span><span class=lnt id=hl-6-2><a class=lnlinks href=#hl-6-2>2</a>
+</span><span class=lnt id=hl-6-3><a class=lnlinks href=#hl-6-3>3</a>
+</span><span class=lnt id=hl-6-4><a class=lnlinks href=#hl-6-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>T</span> <span class=kd>struct</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>Type</span>    <span class=c1>// meta data</span>
+</span></span><span class=line><span class=cl>    <span class=o>...</span>     <span class=c1>// extra data</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=那就认识一下接口吧>那就认识一下接口吧<a hidden class=anchor aria-hidden=true href=#那就认识一下接口吧>#</a></h2><p>Go 语言使用<code>runtime.iface</code>表示第一种接口，使用<code>runtime.eface</code>表示第二种不包含任何方法的接口 <code>interface{}</code>，两种接口虽然都使用<code>interface</code>声明，但是由于后者在Go中很常见，所以在实现时使用了特殊的类型从但单独区分出来。</p><ul><li><strong>空接口</strong></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-7-1><a class=lnlinks href=#hl-7-1>1</a>
+</span><span class=lnt id=hl-7-2><a class=lnlinks href=#hl-7-2>2</a>
+</span><span class=lnt id=hl-7-3><a class=lnlinks href=#hl-7-3>3</a>
+</span><span class=lnt id=hl-7-4><a class=lnlinks href=#hl-7-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>eface</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>_type</span> <span class=o>*</span><span class=nx>_type</span>        <span class=c1>// dynamic type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>data</span>  <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span><span class=c1>// dynamic data</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>当初始化的时候<code>var a interface{}</code>，<code>_type</code> 和 <code>data</code> 都为<code>nil</code>，但当我们为其赋值的时候
+比如赋值<code>*os.File</code>给这个空接口，<code>_type</code>就会指向这个自定义类型的<strong>类型元数据</strong>，<code>data</code>就会直接被这个指针赋值。</p><ul><li><strong>非空接口</strong>
+其实就是有方法列表的接口类型，如果一个变量要想赋值给一个非空接口类型，必须要实现该接口要求的所有方法才行。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-8-1><a class=lnlinks href=#hl-8-1>1</a>
+</span><span class=lnt id=hl-8-2><a class=lnlinks href=#hl-8-2>2</a>
+</span><span class=lnt id=hl-8-3><a class=lnlinks href=#hl-8-3>3</a>
+</span><span class=lnt id=hl-8-4><a class=lnlinks href=#hl-8-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>iface</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tab</span>  <span class=o>*</span><span class=nx>itab</span>          <span class=c1>// method list, dynamic type ...</span>
+</span></span><span class=line><span class=cl>	<span class=nx>data</span> <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span> <span class=c1>// dynamic data</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>与空接口一样，data一定存储实现这个接口的动态值，因此接口所要实现的方法列表以及动态类型信息等等那就只能存储在这个<code>*itab</code>里面啦</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-9-1><a class=lnlinks href=#hl-9-1>1</a>
+</span><span class=lnt id=hl-9-2><a class=lnlinks href=#hl-9-2>2</a>
+</span><span class=lnt id=hl-9-3><a class=lnlinks href=#hl-9-3>3</a>
+</span><span class=lnt id=hl-9-4><a class=lnlinks href=#hl-9-4>4</a>
+</span><span class=lnt id=hl-9-5><a class=lnlinks href=#hl-9-5>5</a>
+</span><span class=lnt id=hl-9-6><a class=lnlinks href=#hl-9-6>6</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>ITab</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Inter</span> <span class=o>*</span><span class=nx>InterfaceType</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Type</span>  <span class=o>*</span><span class=nx>Type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Hash</span>  <span class=kt>uint32</span>     <span class=c1>// copy of Type.Hash. Used for type switches.</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Fun</span>   <span class=p>[</span><span class=mi>1</span><span class=p>]</span><span class=kt>uintptr</span> <span class=c1>// variable sized. fun[0]==0 means Type does not implement Inter.</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>例如我们初始化一个<code>io.ReadWriter</code>的接口，<code>tab</code> 和 <code>data</code> 都为<code>nil</code>，但当我们为其赋值<code>*os.File</code>的时候，<code>data</code>就会直接被这个指针赋值，而<code>tab</code>会指向一个<code>itab</code>的结构体，<code>inter</code>指向<code>io.ReadWriter</code>的接口信息，<code>type</code>指向<code>*os.File</code>的类型元信息，<code>hash</code>为类型元数据中拷贝的哈希，<code>fun</code>为各个方法的地址的拷贝
+<img loading=lazy src=/posts/golang/interface/002.png></p><p><strong>itab缓存</strong>
+但关于<code>itab</code>要重点强调的是，一旦<strong>接口类型</strong>确定了，<strong>动态类型的元信息</strong>确定了，那么<code>itab</code>的内容就不会改变了，所以itab是可以复用的，所以Go运行的时候会把用到的<code>iteb</code>结构体缓存起来，并且以<code>&lt;接口类型，动态类型></code>为key，<code>iteb</code>为value构建出一个哈希表。这里使用<code>itabHashFunc</code>方法得到key进行查找，如果有就直接使用，没有就会创建新的<code>itab</code>结构体添加到这个哈希表中</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-10-1><a class=lnlinks href=#hl-10-1> 1</a>
+</span><span class=lnt id=hl-10-2><a class=lnlinks href=#hl-10-2> 2</a>
+</span><span class=lnt id=hl-10-3><a class=lnlinks href=#hl-10-3> 3</a>
+</span><span class=lnt id=hl-10-4><a class=lnlinks href=#hl-10-4> 4</a>
+</span><span class=lnt id=hl-10-5><a class=lnlinks href=#hl-10-5> 5</a>
+</span><span class=lnt id=hl-10-6><a class=lnlinks href=#hl-10-6> 6</a>
+</span><span class=lnt id=hl-10-7><a class=lnlinks href=#hl-10-7> 7</a>
+</span><span class=lnt id=hl-10-8><a class=lnlinks href=#hl-10-8> 8</a>
+</span><span class=lnt id=hl-10-9><a class=lnlinks href=#hl-10-9> 9</a>
+</span><span class=lnt id=hl-10-10><a class=lnlinks href=#hl-10-10>10</a>
+</span><span class=lnt id=hl-10-11><a class=lnlinks href=#hl-10-11>11</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// Note: change the formula in the mallocgc call in itabAdd if you change these fields.</span>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>itabTableType</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>size</span>    <span class=kt>uintptr</span>             <span class=c1>// length of entries array. Always a power of 2.</span>
+</span></span><span class=line><span class=cl>	<span class=nx>count</span>   <span class=kt>uintptr</span>             <span class=c1>// current number of filled entries.</span>
+</span></span><span class=line><span class=cl>	<span class=nx>entries</span> <span class=p>[</span><span class=nx>itabInitSize</span><span class=p>]</span><span class=o>*</span><span class=nx>itab</span> <span class=c1>// really [size] large</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>itabHashFunc</span><span class=p>(</span><span class=nx>inter</span> <span class=o>*</span><span class=nx>interfacetype</span><span class=p>,</span> <span class=nx>typ</span> <span class=o>*</span><span class=nx>_type</span><span class=p>)</span> <span class=kt>uintptr</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// compiler has provided some good hash codes for us.</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>inter</span><span class=p>.</span><span class=nx>Type</span><span class=p>.</span><span class=nx>Hash</span> <span class=p>^</span> <span class=nx>typ</span><span class=p>.</span><span class=nx>Hash</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=类型断言>类型断言<a hidden class=anchor aria-hidden=true href=#类型断言>#</a></h2><p>刚刚聊过了空接口和非空接口两种接口，而类型断言就是作用在接口值之上</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-11-1><a class=lnlinks href=#hl-11-1>1</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>接口或者非空接口.(具体类型或非空接口类型)
+</span></span></code></pre></td></tr></table></div></div><p>这就排列组合出来了<strong>4种类型断言</strong>，那我们就逐一来看看，他们是怎样进行类型断言的</p><ul><li><strong>空接口.(具体类型)</strong></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-12-1><a class=lnlinks href=#hl-12-1>1</a>
+</span><span class=lnt id=hl-12-2><a class=lnlinks href=#hl-12-2>2</a>
+</span><span class=lnt id=hl-12-3><a class=lnlinks href=#hl-12-3>3</a>
+</span><span class=lnt id=hl-12-4><a class=lnlinks href=#hl-12-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>eface</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>_type</span> <span class=o>*</span><span class=nx>_type</span>        <span class=c1>// dynamic type</span>
+</span></span><span class=line><span class=cl>	<span class=nx>data</span>  <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span><span class=c1>// dynamic data</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>我们先回顾一下空接口，显然，类型断言的时候只需要检查这里的<code>_type</code>是否是具体类型的类型元数据即可</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-13-1><a class=lnlinks href=#hl-13-1>1</a>
+</span><span class=lnt id=hl-13-2><a class=lnlinks href=#hl-13-2>2</a>
+</span><span class=lnt id=hl-13-3><a class=lnlinks href=#hl-13-3>3</a>
+</span><span class=lnt id=hl-13-4><a class=lnlinks href=#hl-13-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>e</span> <span class=kd>interface</span><span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span> <span class=o>:=</span> <span class=s>&#34;whitea&#34;</span>
+</span></span><span class=line><span class=cl><span class=nx>e</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>e</span><span class=p>.(</span><span class=o>*</span><span class=nx>os</span><span class=p>.</span><span class=nx>File</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里<code>data</code>就会被<code>f</code>赋值，类型元数据是全局唯一的，这里也是对的上的，所以断言成功，<code>r</code>即为<code>f</code>,<code>ok</code>为<code>true</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-14-1><a class=lnlinks href=#hl-14-1>1</a>
+</span><span class=lnt id=hl-14-2><a class=lnlinks href=#hl-14-2>2</a>
+</span><span class=lnt id=hl-14-3><a class=lnlinks href=#hl-14-3>3</a>
+</span><span class=lnt id=hl-14-4><a class=lnlinks href=#hl-14-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>e</span> <span class=kd>interface</span><span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span> <span class=o>:=</span> <span class=s>&#34;whitea&#34;</span>
+</span></span><span class=line><span class=cl><span class=nx>e</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>e</span><span class=p>.(</span><span class=kt>string</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里由于类型元数据对不上，因此<code>r</code>即为<code>nil</code>,<code>ok</code>为<code>false</code></p><ul><li><strong>非空接口.(具体类型)</strong></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-15-1><a class=lnlinks href=#hl-15-1>1</a>
+</span><span class=lnt id=hl-15-2><a class=lnlinks href=#hl-15-2>2</a>
+</span><span class=lnt id=hl-15-3><a class=lnlinks href=#hl-15-3>3</a>
+</span><span class=lnt id=hl-15-4><a class=lnlinks href=#hl-15-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>iface</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tab</span>  <span class=o>*</span><span class=nx>itab</span>          <span class=c1>// method list, dynamic type ...</span>
+</span></span><span class=line><span class=cl>	<span class=nx>data</span> <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span> <span class=c1>// dynamic data</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>同样先把非空接口类型的结构拿过来，之前说到过所有的<code>itab</code>结构体都会被缓存起来，然后通过<code>&lt;接口类型，类型元数据></code>为key缓存，所以这里也是只需要计算一下key的位置，比较一次即可</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-16-1><a class=lnlinks href=#hl-16-1>1</a>
+</span><span class=lnt id=hl-16-2><a class=lnlinks href=#hl-16-2>2</a>
+</span><span class=lnt id=hl-16-3><a class=lnlinks href=#hl-16-3>3</a>
+</span><span class=lnt id=hl-16-4><a class=lnlinks href=#hl-16-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>rw</span> <span class=nx>io</span><span class=p>.</span><span class=nx>ReadWriter</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span><span class=p>,</span> <span class=nx>_</span> <span class=o>:=</span> <span class=nx>os</span><span class=p>.</span><span class=nf>Open</span><span class=p>(</span><span class=s>&#34;whitea.md&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>re</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>rw</span><span class=p>.(</span><span class=o>*</span><span class=nx>os</span><span class=p>.</span><span class=nx>File</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里<code>data</code>就会被<code>f</code>赋值，类型元数据和接口类型哈希异或运算后查找<code>itab</code>也能对的上，所以断言成功，<code>r</code>即为<code>f</code>,<code>ok</code>为<code>true</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-17-1><a class=lnlinks href=#hl-17-1>1</a>
+</span><span class=lnt id=hl-17-2><a class=lnlinks href=#hl-17-2>2</a>
+</span><span class=lnt id=hl-17-3><a class=lnlinks href=#hl-17-3>3</a>
+</span><span class=lnt id=hl-17-4><a class=lnlinks href=#hl-17-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>rw</span> <span class=nx>io</span><span class=p>.</span><span class=nx>ReadWriter</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span> <span class=err>：</span><span class=p>=</span> <span class=nx>whitea</span><span class=p>{</span><span class=nx>name</span><span class=p>:</span> <span class=s>&#34;whitea&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>re</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>rw</span><span class=p>.(</span><span class=o>*</span><span class=nx>os</span><span class=p>.</span><span class=nx>File</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里<code>data</code>就会被<code>f</code>赋值，类型元数据和接口类型哈希异或运算后查找<code>itab</code>的类型元数据不一样，<code>itab</code>对不上，所以断言失败，<code>r</code>即为<code>nil</code>,<code>ok</code>为<code>false</code></p><ul><li><strong>空接口.(非空接口)</strong>
+同理是需要比较<code>_type</code>是否一致，但是这里还需要比较这个类型是否实现了非空接口类型的所有方法，因此还涉及到<code>itab</code>查找以及<code>fun</code>数组的比较等操作</li></ul><blockquote><p>但是这里值得一提的是，比较失败的<code>itab</code>结构体也会被缓存起来，同时<code>fun[0] = 0</code>用于表示这个动态类型并没有实现对应的接口，这样之后再次遇到同种的类型断言时候就可以直接返回<code>false</code>了，就不用再去检查方法列表了。</p></blockquote><ul><li><strong>非空接口.(非空接口)</strong>
+这里同样不仅仅需要比较<code>itab</code>里面的类型元数据，也要比较<code>itab</code>里面的接口类型和方法列表是否都实现了，这同样涉及去缓存里面寻找。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-18-1><a class=lnlinks href=#hl-18-1>1</a>
+</span><span class=lnt id=hl-18-2><a class=lnlinks href=#hl-18-2>2</a>
+</span><span class=lnt id=hl-18-3><a class=lnlinks href=#hl-18-3>3</a>
+</span><span class=lnt id=hl-18-4><a class=lnlinks href=#hl-18-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>w</span> <span class=nx>io</span><span class=p>.</span><span class=nx>Writer</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span><span class=p>,</span> <span class=nx>_</span> <span class=o>:=</span> <span class=nx>os</span><span class=p>.</span><span class=nf>Open</span><span class=p>(</span><span class=s>&#34;whitea.md&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>re</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>rw</span><span class=p>.(</span><span class=o>*</span><span class=nx>os</span><span class=p>.</span><span class=nx>File</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里是断言成功的</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-19-1><a class=lnlinks href=#hl-19-1> 1</a>
+</span><span class=lnt id=hl-19-2><a class=lnlinks href=#hl-19-2> 2</a>
+</span><span class=lnt id=hl-19-3><a class=lnlinks href=#hl-19-3> 3</a>
+</span><span class=lnt id=hl-19-4><a class=lnlinks href=#hl-19-4> 4</a>
+</span><span class=lnt id=hl-19-5><a class=lnlinks href=#hl-19-5> 5</a>
+</span><span class=lnt id=hl-19-6><a class=lnlinks href=#hl-19-6> 6</a>
+</span><span class=lnt id=hl-19-7><a class=lnlinks href=#hl-19-7> 7</a>
+</span><span class=lnt id=hl-19-8><a class=lnlinks href=#hl-19-8> 8</a>
+</span><span class=lnt id=hl-19-9><a class=lnlinks href=#hl-19-9> 9</a>
+</span><span class=lnt id=hl-19-10><a class=lnlinks href=#hl-19-10>10</a>
+</span><span class=lnt id=hl-19-11><a class=lnlinks href=#hl-19-11>11</a>
+</span><span class=lnt id=hl-19-12><a class=lnlinks href=#hl-19-12>12</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>var</span> <span class=nx>rw</span> <span class=nx>io</span><span class=p>.</span><span class=nx>ReadWriter</span>
+</span></span><span class=line><span class=cl><span class=nx>f</span> <span class=err>：</span><span class=p>=</span> <span class=nx>whitea</span><span class=p>{</span><span class=nx>name</span><span class=p>:</span> <span class=s>&#34;whitea&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>re</span> <span class=p>=</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>rw</span><span class=p>.(</span><span class=o>*</span><span class=nx>os</span><span class=p>.</span><span class=nx>File</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>whitea</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span> <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>w</span> <span class=nx>whitea</span><span class=p>)</span> <span class=nf>Write</span><span class=p>(</span><span class=nx>b</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>)</span> <span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>w</span><span class=p>.</span><span class=nx>name</span><span class=p>),</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里的自定义类型只实现了Write接口，还有Read接口没有实现，因此类型断言失败，这个<code>itab</code>被缓存起来，<code>r</code>即为<code>nil</code>,<code>ok</code>为<code>false</code></p><p>因此类型断言的关键就在于<strong>明确接口的动态类型(<code>_type</code>)以及对应的类型实现了哪些方法</strong>。而需要明确这些则依赖与类型元数据以及空接口和非空接口的“数据接口”</p><p>OK！Go的类型系统、接口、类型断言就先讲到这里。</p><blockquote><p>作为一名小白Gopher,有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题🤗</p></blockquote></div><footer class=post-footer><ul class=post-tags><li><a href=http://localhost:1313/tags/go/>Go</a></li></ul><nav class=paginav><a class=next href=http://localhost:1313/posts/sast/2025-second-class/><span class=title>Next »</span><br><span>SAST授课-从HTTP到RPC & 服务发现与注册</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=http://localhost:1313/>Whitea's Blog</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

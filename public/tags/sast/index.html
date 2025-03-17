@@ -13,7 +13,7 @@ Redis是Nosql型的非关系型数据库（Nosql：Not Only sql） Redis是基�
 清晰的设计架构：接口提供了清晰的契约，使得开发人员能够明确各个模块的功能和责任。这种设计方式也使得团队协作变得更加简单，便于不同开发人员理解系统的整体架构。
 那跟new一个对象有什么区别呢？ 直接使用具体实现：
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 public class EmailService { public void sendEmail(String message) { // 发送邮件逻辑 } } public class UserService { private EmailService emailService = new EmailService(); public void registerUser(String email) { // 注册用户逻辑 emailService.sendEmail("欢迎注册: " + email); } } 使用接口：
-...</p></div><footer class=entry-footer><span title='2024-11-21 11:30:03 +0000 +0000'>November 21, 2024</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;1089 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to SAST授课-SpringBoot入门" href=http://localhost:1313/posts/sast/get-start-with-spring-boot/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>SAST授课-啥是后端，如何学呢 🤔</h2></header><div class=entry-content><p>碎碎念 首先欢迎大家成功通过笔试面试亦或者是免试进入到SASTWeb研发组，祝愿大家在这里能够学习到自己感兴趣的知识，结识更多志同道合的朋友。但是要记住，加入SAST，意味着更大的舞台，更多的资源，但并不代表你很厉害。 沉下心去学，学习的路真的还挺长的。😵
+...</p></div><footer class=entry-footer><span title='2024-11-21 11:30:03 +0000 +0000'>November 21, 2024</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;1090 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to SAST授课-SpringBoot入门" href=http://localhost:1313/posts/sast/get-start-with-spring-boot/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>SAST授课-啥是后端，如何学呢 🤔</h2></header><div class=entry-content><p>碎碎念 首先欢迎大家成功通过笔试面试亦或者是免试进入到SASTWeb研发组，祝愿大家在这里能够学习到自己感兴趣的知识，结识更多志同道合的朋友。但是要记住，加入SAST，意味着更大的舞台，更多的资源，但并不代表你很厉害。 沉下心去学，学习的路真的还挺长的。😵
 什么是后端 后端是指一个软件系统的服务器端，也称作服务器端。 它是指在一个软件系统中，负责处理数据存储、业务逻辑处理和与前端交互的一部分。 后端通常包括数据库、服务器、应用程序和其他相关组件。
 比如：
 b站这个页面就是前端展示出来的，但是着其中的每一个词条，视频，数据来源都是来源于后端数据库，然后经过后端程序一些算法逻辑传递给前端进行展示。 GitHub（全球最大同性交友平台）的登录界面，这个界面就是前端展示的，而当我们输入Username和Password并点击Sign in之后，数据会传递给后端服务器处理，只有当后端服务器校验通过后，才会给前端返回正确的信息，前端才会跳转主页。 后端开发用什么语言 TIOBE Index - TIOBE
@@ -33,7 +33,7 @@ Top 7 Programming Languages for Backend Web Development - GeeksforGeeks
 codefather/学习路线/Java学习路线(github.com)
 The Roadmap to Becoming a Backend Java Developer | by Hussein Shamas | Medium
 计算机教育中缺失的一课 · the missing semester of your cs education (missing-semester-cn.github.io)
-...</p></div><footer class=entry-footer><span title='2024-10-15 11:30:03 +0000 +0000'>October 15, 2024</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;226 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to SAST授课-啥是后端，如何学呢 🤔" href=http://localhost:1313/posts/sast/first-lesson/></a></article></main><footer class=footer><span>&copy; 2025 <a href=http://localhost:1313/>Whitea's Blog</a></span> ·
+...</p></div><footer class=entry-footer><span title='2024-10-15 11:30:03 +0000 +0000'>October 15, 2024</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;227 words&nbsp;·&nbsp;Whitea</footer><a class=entry-link aria-label="post link to SAST授课-啥是后端，如何学呢 🤔" href=http://localhost:1313/posts/sast/first-lesson/></a></article></main><footer class=footer><span>&copy; 2025 <a href=http://localhost:1313/>Whitea's Blog</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
         <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>

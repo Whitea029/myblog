@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Mar 2025 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 16 Mar 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>硬核——你真的搞定Golang接口了么</title>
+      <link>http://localhost:1313/posts/golang/interface/</link>
+      <pubDate>Sun, 16 Mar 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/golang/interface/</guid>
+      <description>“关于golang类型系统、接口、类型断言的学习与思考”</description>
+    </item>
     <item>
       <title>SAST授课-从HTTP到RPC &amp; 服务发现与注册</title>
       <link>http://localhost:1313/posts/sast/2025-second-class/</link>
@@ -47,13 +54,6 @@
       <pubDate>Thu, 20 Jun 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/alg/kmp/</guid>
       <description>快来看看学了就会忘记的kmp吧</description>
-    </item>
-    <item>
-      <title>分布式定时任务</title>
-      <link>http://localhost:1313/posts/distributed/scheduled-tasks/</link>
-      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/distributed/scheduled-tasks/</guid>
-      <description>分布式定时任务</description>
     </item>
   </channel>
 </rss>
