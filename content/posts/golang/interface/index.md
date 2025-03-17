@@ -180,6 +180,7 @@ type eface struct {
 比如赋值`*os.File`给这个空接口，`_type`就会指向这个自定义类型的**类型元数据**，`data`就会直接被这个指针赋值。
 
 - **非空接口**
+
 其实就是有方法列表的接口类型，如果一个变量要想赋值给一个非空接口类型，必须要实现该接口要求的所有方法才行。
 ```go
 type iface struct {
@@ -200,6 +201,7 @@ type ITab struct {
 ![](./002.png)
 
 **itab缓存**
+
 但关于`itab`要重点强调的是，一旦**接口类型**确定了，**动态类型的元信息**确定了，那么`itab`的内容就不会改变了，所以itab是可以复用的，所以Go运行的时候会把用到的`iteb`结构体缓存起来，并且以`<接口类型，动态类型>`为key，`iteb`为value构建出一个哈希表。这里使用`itabHashFunc`方法得到key进行查找，如果有就直接使用，没有就会创建新的`itab`结构体添加到这个哈希表中
 ```go
 // Note: change the formula in the mallocgc call in itabAdd if you change these fields.
@@ -306,4 +308,4 @@ func (w whitea) Write(b []byte) (n int, err error) {
 
 OK！Go的类型系统、接口、类型断言就先讲到这里。
 
-> 作为一名小白Gopher,有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题，感谢你的阅读🤗
+> 作为一名小白Gopher，有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题，感谢你的阅读🤗
