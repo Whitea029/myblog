@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Mar 2025 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 16 Mar 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>硬核——你真的搞定Golang接口了么</title>
+      <link>http://localhost:1313/posts/golang/interface/</link>
+      <pubDate>Sun, 16 Mar 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/golang/interface/</guid>
+      <description>“关于golang类型系统、接口、类型断言的学习与思考”</description>
+    </item>
     <item>
       <title>SAST授课-从HTTP到RPC &amp; 服务发现与注册</title>
       <link>http://localhost:1313/posts/sast/2025-second-class/</link>
@@ -50,9 +57,23 @@
     </item>
     <item>
       <title>My 1st post</title>
-      <link>http://localhost:1313/posts/golang/interface/</link>
+      <link>http://localhost:1313/posts/distributed/observability/</link>
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/golang/interface/</guid>
+      <guid>http://localhost:1313/posts/distributed/observability/</guid>
+      <description>Desc Text.</description>
+    </item>
+    <item>
+      <title>SAST授课-长连接通讯方案 &amp; 业务网关</title>
+      <link>http://localhost:1313/posts/sast/2025-third-class/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sast/2025-third-class/</guid>
+      <description>Desc Text.</description>
+    </item>
+    <item>
+      <title>硬核——golang之channel、select</title>
+      <link>http://localhost:1313/posts/golang/channel/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/golang/channel/</guid>
       <description>Desc Text.</description>
     </item>
   </channel>

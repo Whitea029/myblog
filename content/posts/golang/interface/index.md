@@ -10,7 +10,7 @@ TocOpen: false
 draft: false
 hidemeta: false
 comments: false
-description: “关于golang类型系统、接口、类型断言的学习与思考”
+description: “关于作者对golang类型系统、接口、类型断言的学习与思考”
 canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableShare: false
@@ -308,4 +308,4 @@ func (w whitea) Write(b []byte) (n int, err error) {
 
 OK！Go的类型系统、接口、类型断言就先讲到这里。
 
-> 作为一名小白Gopher，有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题，感谢你的阅读🤗
+> 作为一名大二小白Gopher，有任何问题都可以联系我，当然也欢迎与我交流技术相关的问题，感谢你的阅读🤗
