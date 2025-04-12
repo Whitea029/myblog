@@ -181,7 +181,7 @@
 </span></span><span class=line><span class=cl>	<span class=nx>Ifn</span>  <span class=nx>TextOff</span> <span class=c1>// fn used in interface call (one-word receiver)</span>
 </span></span><span class=line><span class=cl>	<span class=nx>Tfn</span>  <span class=nx>TextOff</span> <span class=c1>// fn used for normal method call</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></td></tr></table></div></div><p><img loading=lazy src=./001.png></p><p>因此记忆下来的话类型信息<strong>就是<code>_type</code>加上一堆额外的信息罢了</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-6-1><a class=lnlinks href=#hl-6-1>1</a>
+</span></span></code></pre></td></tr></table></div></div><p><img loading=lazy src=/posts/golang/interface/001.png></p><p>因此记忆下来的话类型信息<strong>就是<code>_type</code>加上一堆额外的信息罢了</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-6-1><a class=lnlinks href=#hl-6-1>1</a>
 </span><span class=lnt id=hl-6-2><a class=lnlinks href=#hl-6-2>2</a>
 </span><span class=lnt id=hl-6-3><a class=lnlinks href=#hl-6-3>3</a>
 </span><span class=lnt id=hl-6-4><a class=lnlinks href=#hl-6-4>4</a>
@@ -219,7 +219,7 @@
 </span></span><span class=line><span class=cl>	<span class=nx>Fun</span>   <span class=p>[</span><span class=mi>1</span><span class=p>]</span><span class=kt>uintptr</span> <span class=c1>// variable sized. fun[0]==0 means Type does not implement Inter.</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><p>例如我们初始化一个<code>io.ReadWriter</code>的接口，<code>tab</code> 和 <code>data</code> 都为<code>nil</code>，但当我们为其赋值<code>*os.File</code>的时候，<code>data</code>就会直接被这个指针赋值，而<code>tab</code>会指向一个<code>itab</code>的结构体，<code>inter</code>指向<code>io.ReadWriter</code>的接口信息，<code>type</code>指向<code>*os.File</code>的类型元信息，<code>hash</code>为类型元数据中拷贝的哈希，<code>fun</code>为各个方法的地址的拷贝
-<img loading=lazy src=./002.png></p><p><strong>itab缓存</strong></p><p>但关于<code>itab</code>要重点强调的是，一旦<strong>接口类型</strong>确定了，<strong>动态类型的元信息</strong>确定了，那么<code>itab</code>的内容就不会改变了，所以itab是可以复用的，所以Go运行的时候会把用到的<code>iteb</code>结构体缓存起来，并且以<code>&lt;接口类型，动态类型></code>为key，<code>iteb</code>为value构建出一个哈希表。这里使用<code>itabHashFunc</code>方法得到key进行查找，如果有就直接使用，没有就会创建新的<code>itab</code>结构体添加到这个哈希表中</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-10-1><a class=lnlinks href=#hl-10-1> 1</a>
+<img loading=lazy src=/posts/golang/interface/002.png></p><p><strong>itab缓存</strong></p><p>但关于<code>itab</code>要重点强调的是，一旦<strong>接口类型</strong>确定了，<strong>动态类型的元信息</strong>确定了，那么<code>itab</code>的内容就不会改变了，所以itab是可以复用的，所以Go运行的时候会把用到的<code>iteb</code>结构体缓存起来，并且以<code>&lt;接口类型，动态类型></code>为key，<code>iteb</code>为value构建出一个哈希表。这里使用<code>itabHashFunc</code>方法得到key进行查找，如果有就直接使用，没有就会创建新的<code>itab</code>结构体添加到这个哈希表中</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-10-1><a class=lnlinks href=#hl-10-1> 1</a>
 </span><span class=lnt id=hl-10-2><a class=lnlinks href=#hl-10-2> 2</a>
 </span><span class=lnt id=hl-10-3><a class=lnlinks href=#hl-10-3> 3</a>
 </span><span class=lnt id=hl-10-4><a class=lnlinks href=#hl-10-4> 4</a>

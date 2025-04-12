@@ -28,32 +28,46 @@
       <description>“关于作者对golang类型系统、接口、类型断言的学习与思考”</description>
     </item>
     <item>
+      <title>OTel可观测性</title>
+      <link>http://localhost:1313/posts/distributed/observability/</link>
+      <pubDate>Sat, 08 Mar 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/observability/</guid>
+      <description>2025 SAST.Web第五次授课</description>
+    </item>
+    <item>
       <title>SAST授课-从HTTP到RPC &amp; 服务发现与注册</title>
       <link>http://localhost:1313/posts/sast/2025-second-class/</link>
       <pubDate>Wed, 05 Mar 2025 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/2025-second-class/</guid>
-      <description>SASTWeb组2025后端方向第二次授课</description>
+      <description>2025 SAST.Web第二次授课</description>
     </item>
     <item>
       <title>SAST授课-入门Redis&amp;了解云原生</title>
       <link>http://localhost:1313/posts/sast/2025-first-class/</link>
       <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
-      <description>SASTWeb组2025后端方向第一次授课</description>
+      <description>2025 SAST.Web第一次授课</description>
+    </item>
+    <item>
+      <title>初探微服务架构</title>
+      <link>http://localhost:1313/posts/distributed/microservice/</link>
+      <pubDate>Mon, 10 Feb 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/microservice/</guid>
+      <description>2025 SAST.Web第五次授课</description>
     </item>
     <item>
       <title>SAST授课-SpringBoot入门</title>
       <link>http://localhost:1313/posts/sast/get-start-with-spring-boot/</link>
       <pubDate>Thu, 21 Nov 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/get-start-with-spring-boot/</guid>
-      <description>Web组后端方向第七次课——SpringBoot入门</description>
+      <description>2024 SAST.Web第七次授课</description>
     </item>
     <item>
       <title>SAST授课-啥是后端，如何学呢 🤔</title>
       <link>http://localhost:1313/posts/sast/first-lesson/</link>
       <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/first-lesson/</guid>
-      <description>SAST Web组 后端方向第一次授课</description>
+      <description>2024 SAST.Web第一次授课</description>
     </item>
     <item>
       <title>KMP算法-来自leetcode-28的思考</title>
@@ -61,13 +75,6 @@
       <pubDate>Thu, 20 Jun 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/alg/kmp/</guid>
       <description>快来看看学了就会忘记的kmp吧</description>
-    </item>
-    <item>
-      <title>SAST授课-长连接通讯方案 &amp; 业务网关</title>
-      <link>http://localhost:1313/posts/sast/2025-third-class/</link>
-      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/sast/2025-third-class/</guid>
-      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>

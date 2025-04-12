@@ -11,28 +11,42 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 27 Feb 2025 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 10 Apr 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/sast/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>初探微服务架构</title>
+      <link>http://localhost:1313/posts/distributed/microservice/</link>
+      <pubDate>Thu, 10 Apr 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/microservice/</guid>
+      <description>2025 SAST.Web第五次授课</description>
+    </item>
+    <item>
+      <title>OTel可观测性</title>
+      <link>http://localhost:1313/posts/distributed/observability/</link>
+      <pubDate>Tue, 08 Apr 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/observability/</guid>
+      <description>2025 SAST.Web第五次授课</description>
+    </item>
     <item>
       <title>SAST授课-入门Redis&amp;了解云原生</title>
       <link>http://localhost:1313/posts/sast/2025-first-class/</link>
       <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
-      <description>SASTWeb组2025后端方向第一次授课</description>
+      <description>2025 SAST.Web第一次授课</description>
     </item>
     <item>
       <title>SAST授课-SpringBoot入门</title>
       <link>http://localhost:1313/posts/sast/get-start-with-spring-boot/</link>
       <pubDate>Thu, 21 Nov 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/get-start-with-spring-boot/</guid>
-      <description>Web组后端方向第七次课——SpringBoot入门</description>
+      <description>2024 SAST.Web第七次授课</description>
     </item>
     <item>
       <title>SAST授课-啥是后端，如何学呢 🤔</title>
       <link>http://localhost:1313/posts/sast/first-lesson/</link>
       <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/sast/first-lesson/</guid>
-      <description>SAST Web组 后端方向第一次授课</description>
+      <description>2024 SAST.Web第一次授课</description>
     </item>
   </channel>
 </rss>

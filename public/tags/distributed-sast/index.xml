@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Distributed, SAST on Whitea&#39;s Blog</title>
+    <link>http://localhost:1313/tags/distributed-sast/</link>
+    <description>Recent content in Distributed, SAST on Whitea&#39;s Blog</description>
+    <image>
+      <title>Whitea&#39;s Blog</title>
+      <url>http://localhost:1313/assets/images/cover.jpg</url>
+      <link>http://localhost:1313/assets/images/cover.jpg</link>
+    </image>
+    <generator>Hugo -- 0.145.0</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 10 Apr 2025 11:30:03 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/distributed-sast/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>初探微服务架构</title>
+      <link>http://localhost:1313/posts/distributed/microservice/</link>
+      <pubDate>Thu, 10 Apr 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/microservice/</guid>
+      <description>2025 SAST.Web第五次授课</description>
+    </item>
+    <item>
+      <title>OTel可观测性</title>
+      <link>http://localhost:1313/posts/distributed/observability/</link>
+      <pubDate>Tue, 08 Apr 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/distributed/observability/</guid>
+      <description>2025 SAST.Web第五次授课</description>
+    </item>
+  </channel>
+</rss>

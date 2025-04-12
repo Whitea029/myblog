@@ -11,14 +11,21 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 16 Mar 2025 11:30:03 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Mar 2025 11:30:03 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>硬核——golang之channel、select</title>
+      <link>http://localhost:1313/posts/golang/channel/</link>
+      <pubDate>Thu, 20 Mar 2025 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/golang/channel/</guid>
+      <description>关于作者对golang数据结构channel和select语句底层原理的学习与思考</description>
+    </item>
     <item>
       <title>硬核——你真的搞定Golang接口了么</title>
       <link>http://localhost:1313/posts/golang/interface/</link>
       <pubDate>Sun, 16 Mar 2025 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/golang/interface/</guid>
-      <description>“关于golang类型系统、接口、类型断言的学习与思考”</description>
+      <description>“关于作者对golang类型系统、接口、类型断言的学习与思考”</description>
     </item>
   </channel>
 </rss>
