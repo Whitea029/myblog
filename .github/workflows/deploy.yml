@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      HUGO_CACHEDIR: /tmp/hugo_cache
 
     steps:
       - name: Checkout code
@@ -17,10 +19,17 @@ jobs:
         with:
           submodules: 'recursive'  
 
-      - name: Set up Hugo
+      - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: 'latest'  
+          hugo-version: 'latest' 
+      
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.HUGO_CACHEDIR }} # <- Use the same env variable just right here
+          key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-hugomod-
 
       - name: Build
         run: hugo --minify
