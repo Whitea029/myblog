@@ -2,50 +2,50 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>SAST on Whitea&#39;s Blog</title>
-    <link>https://whitea029.github.io/tags/sast/</link>
+    <link>http://localhost:1313/tags/sast/</link>
     <description>Recent content in SAST on Whitea&#39;s Blog</description>
     <image>
       <title>Whitea&#39;s Blog</title>
-      <url>https://whitea029.github.io/assets/images/cover.jpg</url>
-      <link>https://whitea029.github.io/assets/images/cover.jpg</link>
+      <url>http://localhost:1313/assets/images/cover.jpg</url>
+      <link>http://localhost:1313/assets/images/cover.jpg</link>
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Sat, 08 Mar 2025 11:30:03 +0000</lastBuildDate>
-    <atom:link href="https://whitea029.github.io/tags/sast/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/sast/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>OTel可观测性</title>
-      <link>https://whitea029.github.io/posts/distributed/observability/</link>
+      <link>http://localhost:1313/posts/distributed/observability/</link>
       <pubDate>Sat, 08 Mar 2025 11:30:03 +0000</pubDate>
-      <guid>https://whitea029.github.io/posts/distributed/observability/</guid>
+      <guid>http://localhost:1313/posts/distributed/observability/</guid>
       <description>2025 SAST.Web第五次授课</description>
     </item>
     <item>
       <title>SAST授课-入门Redis&amp;了解云原生</title>
-      <link>https://whitea029.github.io/posts/sast/2025-first-class/</link>
+      <link>http://localhost:1313/posts/sast/2025-first-class/</link>
       <pubDate>Thu, 27 Feb 2025 11:30:03 +0000</pubDate>
-      <guid>https://whitea029.github.io/posts/sast/2025-first-class/</guid>
+      <guid>http://localhost:1313/posts/sast/2025-first-class/</guid>
       <description>2025 SAST.Web第一次授课</description>
     </item>
     <item>
       <title>初探微服务架构</title>
-      <link>https://whitea029.github.io/posts/distributed/microservice/</link>
+      <link>http://localhost:1313/posts/distributed/microservice/</link>
       <pubDate>Mon, 10 Feb 2025 11:30:03 +0000</pubDate>
-      <guid>https://whitea029.github.io/posts/distributed/microservice/</guid>
+      <guid>http://localhost:1313/posts/distributed/microservice/</guid>
       <description>2025 SAST.Web第五次授课</description>
     </item>
     <item>
       <title>SAST授课-SpringBoot入门</title>
-      <link>https://whitea029.github.io/posts/sast/get-start-with-spring-boot/</link>
+      <link>http://localhost:1313/posts/sast/get-start-with-spring-boot/</link>
       <pubDate>Thu, 21 Nov 2024 11:30:03 +0000</pubDate>
-      <guid>https://whitea029.github.io/posts/sast/get-start-with-spring-boot/</guid>
+      <guid>http://localhost:1313/posts/sast/get-start-with-spring-boot/</guid>
       <description>2024 SAST.Web第七次授课</description>
     </item>
     <item>
       <title>SAST授课-啥是后端，如何学呢 🤔</title>
-      <link>https://whitea029.github.io/posts/sast/first-lesson/</link>
+      <link>http://localhost:1313/posts/sast/first-lesson/</link>
       <pubDate>Tue, 15 Oct 2024 11:30:03 +0000</pubDate>
-      <guid>https://whitea029.github.io/posts/sast/first-lesson/</guid>
+      <guid>http://localhost:1313/posts/sast/first-lesson/</guid>
       <description>2024 SAST.Web第一次授课</description>
     </item>
   </channel>
