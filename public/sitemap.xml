@@ -2,58 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/distributed/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/sast/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/distributed/microservice/</loc>
-    <lastmod>2025-04-10T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/distributed/observability/</loc>
-    <lastmod>2025-04-08T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/go/</loc>
+    <loc>https://whitea029.github.io/tags/go/</loc>
     <lastmod>2025-03-20T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/golang/channel/</loc>
+    <loc>https://whitea029.github.io/posts/</loc>
     <lastmod>2025-03-20T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/golang/interface/</loc>
+    <loc>https://whitea029.github.io/tags/</loc>
+    <lastmod>2025-03-20T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/</loc>
+    <lastmod>2025-03-20T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/posts/golang/channel/</loc>
+    <lastmod>2025-03-20T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/posts/golang/interface/</loc>
     <lastmod>2025-03-16T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sast/2025-second-class/</loc>
+    <loc>https://whitea029.github.io/tags/distributed/</loc>
+    <lastmod>2025-03-08T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/posts/distributed/observability/</loc>
+    <lastmod>2025-03-08T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/tags/sast/</loc>
+    <lastmod>2025-03-08T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/posts/sast/2025-second-class/</loc>
     <lastmod>2025-03-05T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sast/2025-first-class/</loc>
+    <loc>https://whitea029.github.io/posts/sast/2025-first-class/</loc>
     <lastmod>2025-02-27T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sast/get-start-with-spring-boot/</loc>
+    <loc>https://whitea029.github.io/posts/distributed/microservice/</loc>
+    <lastmod>2025-02-10T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://whitea029.github.io/posts/sast/get-start-with-spring-boot/</loc>
     <lastmod>2024-11-21T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sast/first-lesson/</loc>
+    <loc>https://whitea029.github.io/posts/sast/first-lesson/</loc>
     <lastmod>2024-10-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/alg/</loc>
+    <loc>https://whitea029.github.io/tags/alg/</loc>
     <lastmod>2024-06-20T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/alg/kmp/</loc>
+    <loc>https://whitea029.github.io/posts/alg/kmp/</loc>
     <lastmod>2024-06-20T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>https://whitea029.github.io/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://whitea029.github.io/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://whitea029.github.io/search/</loc>
   </url>
 </urlset>
