@@ -10,7 +10,7 @@ TocOpen: false
 draft: false
 hidemeta: false
 comments: false
-description: "SAST Web组 后端方向第一次授课"
+description: "2024 SAST.Web第一次授课"
 canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableShare: false

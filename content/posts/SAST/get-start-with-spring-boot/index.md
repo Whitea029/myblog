@@ -10,7 +10,7 @@ TocOpen: false
 draft: false
 hidemeta: false
 comments: false
-description: "Web组后端方向第七次课——SpringBoot入门" 
+description: "2024 SAST.Web第七次授课" 
 canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableShare: false

@@ -1,4 +1,4 @@
-name: Deploy Hugo Site
+name: Deploy Hugo Site to GitHub Pages
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -23,28 +25,8 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      - name: Install SSH client and rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client rsync  
-
-      - name: Check for rsync
-        run: |
-          which rsync
-          rsync --version
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Deploy to Server
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          TARGET_DIR: ${{ secrets.TARGET_DIR }}
-        run: |
-          rsync -avz --delete -vv public/ $SSH_USER@$SSH_HOST:$TARGET_DIR
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
